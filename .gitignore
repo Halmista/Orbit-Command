@@ -361,3 +361,27 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Assets/Mats
+/Assets/Prefabs
+/Assets/Scenes
+/Assets/Settings
+/Assets/Readme.asset
+/Assets/TextMesh Pro
+/Assets/TutorialInfo
+/Assets/UniversalRenderPipelineGlobalSettings.asset
+/Assets/wireframe.fbx
+/Assets/wireframe2 1.fbx
+/Assets/wireframe3.fbx
+/.vsconfig
+/AGENTS.md
+/Assembly-CSharp-Editor.csproj
+/Assembly-CSharp.csproj
+/Library
+/MerryYellow.CodeAssist.Editor.csproj
+/Project Orbit Keycontrol.sln
+/ProjectSettings
+/UserSettings
+/UserSettings/EditorUserSettings.asset
+/UserSettings/Layouts
+/UserSettings/Search.index
+/UserSettings/Search.settings

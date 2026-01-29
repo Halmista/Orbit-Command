@@ -12,8 +12,8 @@ public class Gameplay : MonoBehaviour
     public float earthRadius = 1f; // radius of the Earth
     public float earthHP = 100f;  // starting HP
 
-    [Header("Meteor Settings")]
-    public float meteorDamage = 10f; // damage per meteor
+   // [Header("Meteor Settings")]
+    //public float meteorDamage = 10f; // damage per meteor
 
     void Update()
     {

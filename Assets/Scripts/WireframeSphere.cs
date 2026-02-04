@@ -17,18 +17,21 @@ public class WireframeSphere : MonoBehaviour
 
     [Header("Camera for visibility")]
     public Camera cam; // assign your orbit camera
-
-    /*[Header("Vertex Labels")]
-    public GameObject labelPrefab;
-    public float labelSurfaceOffset = 0.02f;*/
+    [Header("Vertex Letters")]
+    public GameObject letterPrefab;   // TMP prefab
+    public int letterCount = 20;
+    public float letterScale = 0.09f;
+    public string availableLetters = "abcdefghijklmnopqrstuvwxyz";
 
     [HideInInspector]
     public List<Vector3> worldVertices = new List<Vector3>();
-    [HideInInspector]
     public List<Vector3> verticesFacingCamera = new List<Vector3>();
 
     private LineRenderer lineRenderer;
-    //private Dictionary<Vector3, GameObject> activeLabels = new();
+    private Dictionary<Vector3, GameObject> activeLabels = new();
+    private Queue<char> letterQueue;
+    public OrbitPivot orbitPivot;
+
 
     void Start()
     {
@@ -39,10 +42,14 @@ public class WireframeSphere : MonoBehaviour
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
         lastCameraForward = cam.transform.forward;
+        letterQueue = new Queue<char>(availableLetters);
+        orbitPivot.OnRotationEnd += HandleCameraRotated;
 
 
         DrawWireframe();
         CalculateVertices();
+        UpdateVerticesFacingCamera();
+        UpdateLettersFacingCamera();
     }
 
     void Update()
@@ -59,6 +66,17 @@ public class WireframeSphere : MonoBehaviour
         }
     }
 
+    void HandleCameraRotated()
+    {
+        UpdateVerticesFacingCamera();
+        UpdateLettersFacingCamera();
+    }
+
+    void OnDestroy()
+    {
+        if (orbitPivot != null)
+            orbitPivot.OnRotationEnd -= HandleCameraRotated;
+    }
 
     void DrawWireframe()
     {
@@ -99,9 +117,9 @@ public class WireframeSphere : MonoBehaviour
     public void CalculateVertices()
     {
         worldVertices.Clear();
-        Vector3 sphereCenter = transform.position;
+        Vector3 sphereCenter = transform.position; //this gets the position of the game object and that becomes the center
 
-        for (int i = 0; i <= latitudeLines; i++)
+        for (int i = 0; i <= latitudeLines; i++) //loops through the latitude lines from top to bottom
         {
             float lat = Mathf.PI * i / latitudeLines - Mathf.PI / 2f;
             for (int j = 0; j <= longitudeLines; j++)
@@ -138,8 +156,61 @@ public class WireframeSphere : MonoBehaviour
             }
         }
     }
+    void UpdateLettersFacingCamera()
+    {
+        if (letterPrefab == null || cam == null) return;
+
+        // Spawn or update visible vertices
+        foreach (var vertex in verticesFacingCamera)
+        {
+            if (activeLabels.ContainsKey(vertex))
+            {
+                // Just re-orient existing label
+                GameObject label = activeLabels[vertex];
+                label.transform.LookAt(
+                    label.transform.position + cam.transform.forward,
+                    cam.transform.up
+                );
+                continue;
+            }
+
+            if (letterQueue.Count == 0)
+                return; // no more unique letters
+
+            // Spawn new label
+            GameObject labelObj = Instantiate(letterPrefab, vertex, Quaternion.identity, transform);
+            labelObj.transform.localScale = Vector3.one * letterScale;
+
+            labelObj.transform.LookAt(
+                labelObj.transform.position + cam.transform.forward,
+                cam.transform.up
+            );
+
+            TMP_Text tmp = labelObj.GetComponent<TMP_Text>();
+            if (tmp != null)
+                tmp.text = letterQueue.Dequeue().ToString(); // 🔥 unique letter
+
+            activeLabels.Add(vertex, labelObj);
+        }
+
+        // Hide labels that are no longer facing the camera
+        List<Vector3> toRemove = new();
+
+        foreach (var pair in activeLabels)
+        {
+            if (!verticesFacingCamera.Contains(pair.Key))
+            {
+                pair.Value.SetActive(false);
+                toRemove.Add(pair.Key);
+            }
+        }
+
+        foreach (var key in toRemove)
+            activeLabels.Remove(key);
+    }
 
 
-    
+
+
 
 }

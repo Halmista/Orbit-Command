@@ -324,7 +324,7 @@ MonoBehaviour:
   wireframeSphere: {fileID: 2078107130}
   earthCenter: {fileID: 1204487061}
   earthRadius: 1
-  earthHP: 100
+  earthHP: 1000
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -688,8 +688,14 @@ MonoBehaviour:
   lineColor: {r: 1, g: 0.54908407, b: 0, a: 1}
   lineWidth: 0.009
   cam: {fileID: 330585545}
+  letterPrefab: {fileID: 651540358263500971, guid: 461f53fba04092941a3df53e70c3307d,
+    type: 3}
+  letterCount: 26
+  letterScale: 0.1
+  availableLetters: abcdefghijklmnopqrstuvwxyz
   worldVertices: []
   verticesFacingCamera: []
+  orbitPivot: {fileID: 287269355}
 --- !u!120 &2078107131
 LineRenderer:
   serializedVersion: 2

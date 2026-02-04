@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,9 @@ public class OrbitPivot : MonoBehaviour
 {
     public float rotationAmount = 45f; // degrees per tap
     public float rotationSpeed = 180f; // degrees per second for smooth rotation
+
+    public event Action OnRotationStart;
+    public event Action OnRotationEnd;
 
     private float targetRotationY;
     private bool isRotating = false;
@@ -24,11 +28,13 @@ public class OrbitPivot : MonoBehaviour
             {
                 targetRotationY += rotationAmount; // clockwise
                 isRotating = true;
+                OnRotationStart?.Invoke();
             }
             else if (Input.GetKeyDown(KeyCode.RightShift))
             {
                 targetRotationY -= rotationAmount; // counter-clockwise
                 isRotating = true;
+                OnRotationStart?.Invoke();
             }
         }
 
@@ -42,6 +48,7 @@ public class OrbitPivot : MonoBehaviour
             if (Mathf.Approximately(newY, targetRotationY))
             {
                 isRotating = false; // done rotating
+                OnRotationEnd?.Invoke();
             }
         }
     }

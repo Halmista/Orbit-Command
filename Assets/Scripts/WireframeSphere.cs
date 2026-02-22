@@ -17,6 +17,7 @@ public class WireframeSphere : MonoBehaviour
 
     [Header("Camera for visibility")]
     public Camera cam; // assign your orbit camera
+    
     [Header("Vertex Letters")]
     public GameObject letterPrefab;   // TMP prefab
     public int letterCount = 20;
@@ -29,7 +30,7 @@ public class WireframeSphere : MonoBehaviour
 
     private LineRenderer lineRenderer;
     private Dictionary<Vector3, GameObject> activeLabels = new();
-    private Queue<char> letterQueue;
+    //private Queue<char> letterQueue;
     public OrbitPivot orbitPivot;
 
 
@@ -42,7 +43,7 @@ public class WireframeSphere : MonoBehaviour
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
         lastCameraForward = cam.transform.forward;
-        letterQueue = new Queue<char>(availableLetters);
+        //letterQueue = new Queue<char>(availableLetters);
         orbitPivot.OnRotationEnd += HandleCameraRotated;
 
 
@@ -160,24 +161,40 @@ public class WireframeSphere : MonoBehaviour
     {
         if (letterPrefab == null || cam == null) return;
 
-        // Spawn or update visible vertices
-        foreach (var vertex in verticesFacingCamera)
+        // 🔥 Destroy all existing labels (full reset)
+        foreach (var pair in activeLabels)
         {
-            if (activeLabels.ContainsKey(vertex))
-            {
-                // Just re-orient existing label
-                GameObject label = activeLabels[vertex];
-                label.transform.LookAt(
-                    label.transform.position + cam.transform.forward,
-                    cam.transform.up
-                );
-                continue;
-            }
+            if (pair.Value != null)
+                Destroy(pair.Value);
+        }
 
-            if (letterQueue.Count == 0)
-                return; // no more unique letters
+        activeLabels.Clear();
 
-            // Spawn new label
+        if (verticesFacingCamera.Count == 0)
+            return;
+
+        for (int i = 0; i < verticesFacingCamera.Count; i++)
+        {
+            int randIndex = UnityEngine.Random.Range(i, verticesFacingCamera.Count);
+            (verticesFacingCamera[i], verticesFacingCamera[randIndex]) =
+                (verticesFacingCamera[randIndex], verticesFacingCamera[i]);
+        }
+        // Create a temporary list of available letters
+        List<char> available = new List<char>(availableLetters);
+
+        // Shuffle letters randomly
+        for (int i = 0; i < available.Count; i++)
+        {
+            int randIndex = UnityEngine.Random.Range(i, available.Count);
+            (available[i], available[randIndex]) = (available[randIndex], available[i]);
+        }
+
+        int lettersToSpawn = Mathf.Min(letterCount, verticesFacingCamera.Count, available.Count);
+
+        for (int i = 0; i < lettersToSpawn; i++)
+        {
+            Vector3 vertex = verticesFacingCamera[i];
+
             GameObject labelObj = Instantiate(letterPrefab, vertex, Quaternion.identity, transform);
             labelObj.transform.localScale = Vector3.one * letterScale;
 
@@ -188,29 +205,10 @@ public class WireframeSphere : MonoBehaviour
 
             TMP_Text tmp = labelObj.GetComponent<TMP_Text>();
             if (tmp != null)
-                tmp.text = letterQueue.Dequeue().ToString(); // 🔥 unique letter
+                tmp.text = available[i].ToString(); // 🔥 random letter
 
             activeLabels.Add(vertex, labelObj);
         }
-
-        // Hide labels that are no longer facing the camera
-        List<Vector3> toRemove = new();
-
-        foreach (var pair in activeLabels)
-        {
-            if (!verticesFacingCamera.Contains(pair.Key))
-            {
-                pair.Value.SetActive(false);
-                toRemove.Add(pair.Key);
-            }
-        }
-
-        foreach (var key in toRemove)
-            activeLabels.Remove(key);
     }
-
-
-
-
 
 }

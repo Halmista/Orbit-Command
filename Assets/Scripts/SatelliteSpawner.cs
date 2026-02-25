@@ -4,9 +4,9 @@ using UnityEngine;
 public class SatelliteSpawner : MonoBehaviour
 {
     [Header("References")]
-    public WireframeSphere wireframeSphere; // your wireframe sphere
-    public GameObject satellitePrefab;      // cylinder or cube
-    public GameObject laserPrefab;          // laser prefab
+    public WireframeSphere wireframeSphere; 
+    public GameObject satellitePrefab;      
+    public GameObject laserPrefab;          
     public int satelliteCount = 10;
 
     void Start()

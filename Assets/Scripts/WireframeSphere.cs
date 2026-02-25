@@ -16,10 +16,10 @@ public class WireframeSphere : MonoBehaviour
     private Vector3 lastCameraForward;
 
     [Header("Camera for visibility")]
-    public Camera cam; // assign your orbit camera
+    public Camera cam; 
     
     [Header("Vertex Letters")]
-    public GameObject letterPrefab;   // TMP prefab
+    public GameObject letterPrefab; 
     public int letterCount = 20;
     public float letterScale = 0.09f;
     public string availableLetters = "abcdefghijklmnopqrstuvwxyz";

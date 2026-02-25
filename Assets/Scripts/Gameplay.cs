@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gameplay : MonoBehaviour
 {
     [Header("Wireframe Sphere")]
-    public WireframeSphere wireframeSphere; // assign your WireframeSphere
+    public WireframeSphere wireframeSphere; 
 
     [Header("Earth Settings")]
     public Transform earthCenter;  // center of the Earth
@@ -26,7 +26,7 @@ public class Gameplay : MonoBehaviour
             return;
         }
 
-        // Example: Activate ultimate with the spacebar
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (ultimateReady)

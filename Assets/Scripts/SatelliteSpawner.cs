@@ -23,6 +23,24 @@ public class SatelliteSpawner : MonoBehaviour
             return;
         }
 
+        Vector3 center = wireframeSphere.transform.position;
+        Vector3 sphereUp = wireframeSphere.transform.up;
+        float poleThreshold = 0.85f; // Exclude vertices close to poles
+
+        // Filter out poles
+        vertices.RemoveAll(v =>
+        {
+            Vector3 dir = (v - center).normalized;
+            float verticalDot = Mathf.Abs(Vector3.Dot(dir, sphereUp));
+            return verticalDot > poleThreshold;
+        });
+
+        if (vertices.Count == 0)
+        {
+            Debug.LogWarning("All vertices are at poles. Cannot spawn satellites.");
+            return;
+        }
+
         for (int i = 0; i < satelliteCount && vertices.Count > 0; i++)
         {
             int index = Random.Range(0, vertices.Count);
@@ -30,8 +48,8 @@ public class SatelliteSpawner : MonoBehaviour
             vertices.RemoveAt(index);
 
             // Spawn exactly on the surface
-            Vector3 directionFromCenter = (vertex - wireframeSphere.transform.position).normalized;
-            Vector3 spawnPos = wireframeSphere.transform.position + directionFromCenter * wireframeSphere.radius;
+            Vector3 directionFromCenter = (vertex - center).normalized;
+            Vector3 spawnPos = center + directionFromCenter * wireframeSphere.radius;
 
             GameObject sat = Instantiate(satellitePrefab, spawnPos, Quaternion.identity);
 

@@ -1,36 +1,112 @@
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SatelliteShooter : MonoBehaviour
 {
-    public GameObject laserPrefab;      // automatically assigned
-    public float laserSpeed = 20f;
-    public float minFireInterval = 0.5f;
-    public float maxFireInterval = 2f;
+    public GameObject laserPrefab;
+
+    [Header("Detection")]
+    public float detectionRange = 10f; // radius around satellite to detect meteors
+    public float detectionAngle = 70f; // degrees of cone outward
+
+    [Header("Firing")]
+    public float fireRate = 0.5f;
+    public float laserSpeed = 25f;
+
+    private WireframeSphere sphere;
+    private float fireTimer;
 
     void Start()
     {
-        Invoke(nameof(FireLaser), Random.Range(minFireInterval, maxFireInterval));
+        // Cache the sphere
+        sphere = FindObjectOfType<WireframeSphere>();
+
+        // Register satellite
+        if (SatelliteManager.Instance != null)
+            SatelliteManager.Instance.RegisterSatellite(this);
     }
 
-    void FireLaser()
+    void Update()
     {
-        if (laserPrefab != null)
+        if (laserPrefab == null || sphere == null) return;
+
+        // Check for meteors in cone
+        Meteor targetMeteor = FindMeteorInCone();
+
+        if (targetMeteor != null)
         {
-            // Outward direction with slight random spread
-            Vector3 dir = transform.forward + Random.insideUnitSphere * 0.2f;
-            dir.Normalize();
+            fireTimer += Time.deltaTime;
+            if (fireTimer >= fireRate)
+            {
+                FireLaser(targetMeteor);
+                fireTimer = 0f;
+            }
+        }
+        else
+        {
+            fireTimer = 0f; // reset timer if no target
+        }
+    }
 
-            GameObject laser = Instantiate(laserPrefab, transform.position, Quaternion.identity);
+    Meteor FindMeteorInCone()
+    {
+        Meteor[] meteors = FindObjectsOfType<Meteor>();
+        float closestDist = Mathf.Infinity;
+        Meteor closest = null;
 
-            Rigidbody rb = laser.GetComponent<Rigidbody>();
-            if (rb == null) rb = laser.AddComponent<Rigidbody>();
-            rb.useGravity = false;
-            rb.velocity = dir * laserSpeed;
+        Vector3 outward = (transform.position - sphere.transform.position).normalized;
 
-            Destroy(laser, 10f); // cleanup
+        foreach (var m in meteors)
+        {
+            Vector3 dirToMeteor = (m.transform.position - transform.position).normalized;
+            float angle = Vector3.Angle(outward, dirToMeteor);
+            float dist = Vector3.Distance(transform.position, m.transform.position);
+
+            if (angle <= detectionAngle / 2f && dist <= detectionRange)
+            {
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closest = m;
+                }
+            }
         }
 
-        // Schedule next shot
-        Invoke(nameof(FireLaser), Random.Range(minFireInterval, maxFireInterval));
+        return closest;
+    }
+
+    void FireLaser(Meteor target)
+    {
+        if (laserPrefab == null || target == null) return;
+
+        // Direction from satellite to target
+        Vector3 dir = (target.transform.position - transform.position).normalized;
+
+        GameObject laser = Instantiate(laserPrefab, transform.position, Quaternion.LookRotation(dir));
+
+        Rigidbody rb = laser.GetComponent<Rigidbody>();
+        if (rb == null) rb = laser.AddComponent<Rigidbody>();
+
+        rb.useGravity = false;
+        rb.velocity = dir * laserSpeed;
+
+        // Ignore collision with sphere
+        Collider laserCol = laser.GetComponent<Collider>();
+        Collider sphereCol = sphere.GetComponent<Collider>();
+        if (laserCol != null && sphereCol != null)
+            Physics.IgnoreCollision(laserCol, sphereCol);
+
+        // Destroy laser after 5 seconds
+        Destroy(laser, 5f);
+
+        // Add a script to deal damage when it hits
+        laser.AddComponent<LaserHit>();
+    }
+
+    // Helper for LetterInputController
+    public bool IsBusy()
+    {
+        return FindMeteorInCone() != null;
     }
 }

@@ -1,12 +1,9 @@
 fileFormatVersion: 2
-guid: 14ea88b678ccaae4bb19d978e9a46023
+guid: 921d99af6a1bb0f479187674072099ac
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - gameplay: {instanceID: 0}
-  - earthCenter: {instanceID: 0}
-  - meteorPrefab: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

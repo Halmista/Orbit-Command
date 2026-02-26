@@ -8,6 +8,9 @@ public class MeteorSpawner : MonoBehaviour
     public Transform earthCenter;
     public GameObject meteorPrefab;
 
+    [Header("Impact Indicator")]
+    public GameObject impactRingPrefab;
+
     [Header("Spawn Settings")]
     public float spawnRadius = 50f;   // distance from Earth
     public float meteorSpeed = 5f;
@@ -95,11 +98,29 @@ public class MeteorSpawner : MonoBehaviour
             UIManager.Instance.IncrementActiveMeteors();
             UIManager.Instance.LogMeteorSpawn(spawnPos);
         }
-        Meteor mScript = meteor.AddComponent<Meteor>();
+        Meteor mScript = meteor.GetComponent<Meteor>();
         mScript.Initialize(targetDir, meteorSpeed, gameplay, meteorDamage, earthCenter.position, gameplay.earthRadius);
 
         DrawMeteorPath(spawnPos, earthCenter.position);
-        Debug.Log($"Spawned meteor at {spawnPos} towards {earthCenter.position}");
-        Debug.DrawLine(spawnPos, earthCenter.position, Color.red, 5f);
+
+        Vector3 toCenter = (earthCenter.position - spawnPos).normalized;
+        Vector3 impactPoint = earthCenter.position - toCenter * gameplay.earthRadius;
+
+        // Spawn ring
+        GameObject ring = Instantiate(impactRingPrefab, impactPoint, Quaternion.identity);
+
+        // Rotate so it sits flat on sphere
+        Vector3 normal = (impactPoint - earthCenter.position).normalized;
+        ring.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
+
+        mScript.SetImpactRing(ring);
+
+        RingPulse pulse = ring.GetComponent<RingPulse>();
+        if (pulse != null)
+        {
+            pulse.Initialize(meteor.transform, earthCenter);
+        }
+        //Debug.Log($"Spawned meteor at {spawnPos} towards {earthCenter.position}");
+        //Debug.DrawLine(spawnPos, earthCenter.position, Color.red, 5f);
     }
 }

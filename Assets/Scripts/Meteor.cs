@@ -9,6 +9,8 @@ public class Meteor : MonoBehaviour
     Vector3 earthPos;
     float earthRadius;
     public float hp = 20f; // health of meteor
+    private GameObject impactRing;
+    public GameObject shockwavePrefab;
 
     public void Initialize(Vector3 dir, float spd, Gameplay game, float dmg, Vector3 ePos, float eRadius)
     {
@@ -41,6 +43,10 @@ public class Meteor : MonoBehaviour
           
         }
     }
+    public void SetImpactRing(GameObject ring)
+    {
+        impactRing = ring;
+    }
 
     public void KillMeteor(bool destroyedByPlayer)
     {
@@ -51,7 +57,13 @@ public class Meteor : MonoBehaviour
             if (destroyedByPlayer)
                 UIManager.Instance.IncrementDestroyedMeteors();
         }
-
+        if (shockwavePrefab != null)
+        {
+            Instantiate(shockwavePrefab, transform.position, Quaternion.identity);
+        }
         Destroy(gameObject);
+
+        if (impactRing != null)
+            Destroy(impactRing);
     }
 }

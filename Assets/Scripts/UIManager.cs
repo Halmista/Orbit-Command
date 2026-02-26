@@ -68,8 +68,6 @@ public class UIManager : MonoBehaviour
         UpdateDestroyedText();
     }
 
-   
-
     public void UpdateUltimateCharge(float percent)
     {
         if (ultimateChargeText != null)

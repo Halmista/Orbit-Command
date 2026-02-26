@@ -121,6 +121,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 20
+  shockwavePrefab: {fileID: 3771580177276375867, guid: 077bdaa3575d62f42b5ce7afba7aced2,
+    type: 3}
 --- !u!198 &-5766269363883466187
 ParticleSystem:
   m_ObjectHideFlags: 0

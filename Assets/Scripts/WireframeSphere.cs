@@ -8,7 +8,7 @@ public class WireframeSphere : MonoBehaviour
 {
     [Header("Sphere Settings")]
     public int latitudeLines = 12;
-    public int longitudeLines = 24;
+    public int longitudeLines = 20;
     public float radius = 1.2f;
     public Material lineMaterial;
     public Color lineColor = Color.red;

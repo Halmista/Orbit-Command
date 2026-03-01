@@ -29,7 +29,7 @@ public class WireframeSphere : MonoBehaviour
     public List<Vector3> verticesFacingCamera = new List<Vector3>();
 
     private LineRenderer lineRenderer;
-    private Dictionary<Vector3, GameObject> activeLabels = new();
+    public Dictionary<Vector3, GameObject> activeLabels = new();
     //private Queue<char> letterQueue;
     public OrbitPivot orbitPivot;
     public Dictionary<char, Vector3> letterToVertex = new();

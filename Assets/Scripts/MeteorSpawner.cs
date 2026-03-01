@@ -36,9 +36,7 @@ public class MeteorSpawner : MonoBehaviour
                 // Destroy all existing meteors
                 Meteor[] existingMeteors = FindObjectsOfType<Meteor>();
                 foreach (Meteor m in existingMeteors)
-                {
                     Destroy(m.gameObject);
-                }
 
                 yield break; // stop the coroutine
             }
@@ -47,6 +45,7 @@ public class MeteorSpawner : MonoBehaviour
             yield return new WaitForSeconds(spawnInterval);
         }
     }
+
     void DrawMeteorPath(Vector3 start, Vector3 end)
     {
         GameObject lineObj = new GameObject("MeteorPathLine");
@@ -61,20 +60,16 @@ public class MeteorSpawner : MonoBehaviour
         lr.material = new Material(Shader.Find("Unlit/Color"));
         lr.material.color = Color.red;
 
-        // Destroy line after 5 seconds
         Destroy(lineObj, 10f);
     }
+
     void SpawnMeteor()
     {
         if (gameplay != null && gameplay.earthHP <= 0f)
             return;
 
-        // Define safe latitude range (in degrees)
-        float minLatitude = -60f; // south pole limit
-        float maxLatitude = 60f;  // north pole limit
-
         // Random latitude and longitude
-        float lat = Random.Range(minLatitude, maxLatitude) * Mathf.Deg2Rad;
+        float lat = Random.Range(-60f, 60f) * Mathf.Deg2Rad;
         float lon = Random.Range(0f, 360f) * Mathf.Deg2Rad;
 
         // Convert spherical to Cartesian
@@ -98,29 +93,34 @@ public class MeteorSpawner : MonoBehaviour
             UIManager.Instance.IncrementActiveMeteors();
             UIManager.Instance.LogMeteorSpawn(spawnPos);
         }
+
         Meteor mScript = meteor.GetComponent<Meteor>();
         mScript.Initialize(targetDir, meteorSpeed, gameplay, meteorDamage, earthCenter.position, gameplay.earthRadius);
 
         DrawMeteorPath(spawnPos, earthCenter.position);
 
+        // Calculate impact point on Earth's surface
         Vector3 toCenter = (earthCenter.position - spawnPos).normalized;
         Vector3 impactPoint = earthCenter.position - toCenter * gameplay.earthRadius;
 
-        // Spawn ring
-        GameObject ring = Instantiate(impactRingPrefab, impactPoint, Quaternion.identity);
-
-        // Rotate so it sits flat on sphere
-        Vector3 normal = (impactPoint - earthCenter.position).normalized;
-        ring.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
-
-        mScript.SetImpactRing(ring);
-
-        RingPulse pulse = ring.GetComponent<RingPulse>();
-        if (pulse != null)
+        // Spawn impact ring
+        if (impactRingPrefab != null)
         {
-            pulse.Initialize(meteor.transform, earthCenter);
+            GameObject ringObj = Instantiate(impactRingPrefab, impactPoint, Quaternion.identity);
+
+            // Align ring flat on Earth's surface
+            Vector3 normal = (impactPoint - earthCenter.position).normalized;
+            ringObj.transform.rotation = Quaternion.FromToRotation(Vector3.up, normal);
+
+            // Assign to meteor
+            mScript.SetImpactRing(ringObj);
+
+            // Initialize RingPulse
+            RingPulse ringPulse = ringObj.GetComponent<RingPulse>();
+            if (ringPulse != null)
+            {
+                ringPulse.Initialize(meteor.transform, earthCenter, gameplay);
+            }
         }
-        //Debug.Log($"Spawned meteor at {spawnPos} towards {earthCenter.position}");
-        //Debug.DrawLine(spawnPos, earthCenter.position, Color.red, 5f);
     }
 }

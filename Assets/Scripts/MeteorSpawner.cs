@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class MeteorSpawner : MonoBehaviour
@@ -46,21 +46,47 @@ public class MeteorSpawner : MonoBehaviour
         }
     }
 
-    void DrawMeteorPath(Vector3 start, Vector3 end)
+    void DrawMeteorPath(GameObject meteor, Vector3 start, Vector3 end)
     {
         GameObject lineObj = new GameObject("MeteorPathLine");
         LineRenderer lr = lineObj.AddComponent<LineRenderer>();
 
-        lr.positionCount = 2;
-        lr.SetPosition(0, start);
-        lr.SetPosition(1, end);
+        int segments = 20;
+        lr.positionCount = segments;
 
-        lr.startWidth = 0.01f;
+        for (int i = 0; i < segments; i++)
+        {
+            float t = i / (float)(segments - 1);
+            Vector3 pos = Vector3.Lerp(start, end, t);
+            lr.SetPosition(i, pos);
+        }
+
+        lr.startWidth = 0.05f;
         lr.endWidth = 0.01f;
-        lr.material = new Material(Shader.Find("Unlit/Color"));
-        lr.material.color = Color.red;
 
-        Destroy(lineObj, 10f);
+        lr.material = new Material(Shader.Find("Unlit/Texture"));
+        lr.material.mainTexture = GenerateDashedTexture();
+        lr.textureMode = LineTextureMode.Tile;
+
+        MeteorPathPulse pulse = lineObj.AddComponent<MeteorPathPulse>();
+        pulse.Initialize(meteor);
+
+    }
+    Texture2D GenerateDashedTexture()
+    {
+        Texture2D tex = new Texture2D(128, 1);
+        tex.wrapMode = TextureWrapMode.Repeat;
+
+        for (int i = 0; i < 128; i++)
+        {
+            if (i % 32 < 16)   // bigger dash blocks
+                tex.SetPixel(i, 0, Color.red);
+            else
+                tex.SetPixel(i, 0, Color.clear);
+        }
+
+        tex.Apply();
+        return tex;
     }
 
     void SpawnMeteor()
@@ -97,7 +123,7 @@ public class MeteorSpawner : MonoBehaviour
         Meteor mScript = meteor.GetComponent<Meteor>();
         mScript.Initialize(targetDir, meteorSpeed, gameplay, meteorDamage, earthCenter.position, gameplay.earthRadius);
 
-        DrawMeteorPath(spawnPos, earthCenter.position);
+        DrawMeteorPath(meteor, spawnPos, earthCenter.position);
 
         // Calculate impact point on Earth's surface
         Vector3 toCenter = (earthCenter.position - spawnPos).normalized;

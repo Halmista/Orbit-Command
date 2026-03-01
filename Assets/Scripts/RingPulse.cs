@@ -10,6 +10,9 @@ public class RingPulse : MonoBehaviour
     public float minScale = 0.3f;
     public float maxScale = 1.5f;
 
+    [Header("Size Multiplier")]
+    public float sizeMultiplier = 1f;
+
     [Header("Danger Settings")]
     public float flashThreshold = 0.8f;     // when to start flashing (80% close)
     public float flashSpeed = 10f;
@@ -22,11 +25,12 @@ public class RingPulse : MonoBehaviour
     private Color baseColor;
     private bool isFadingOut = false;
 
-    public void Initialize(Transform meteorTransform, Transform earthTransform, Gameplay gameplayRef)
+    public void Initialize(Transform meteorTransform, Transform earthTransform, Gameplay gameplayRef, float multiplier = 1f)
     {
         meteor = meteorTransform;
         earth = earthTransform;
         gameplay = gameplayRef;
+        sizeMultiplier = multiplier;
 
         if (meteor == null || earth == null)
         {
@@ -69,7 +73,7 @@ public class RingPulse : MonoBehaviour
         float progress = Mathf.Clamp01(1f - (currentDistance / maxDistance));
 
         // SCALE (flat on ground)
-        float scale = Mathf.Lerp(minScale, maxScale, progress);
+        float scale = Mathf.Lerp(minScale, maxScale, progress) * sizeMultiplier;
         transform.localScale = new Vector3(baseScale.x * scale, baseScale.y, baseScale.z * scale);
 
         // COLOR SHIFT (Yellow → Red)

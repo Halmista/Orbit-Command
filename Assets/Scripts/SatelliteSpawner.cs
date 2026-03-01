@@ -19,7 +19,7 @@ public class SatelliteSpawner : MonoBehaviour
         // Spawn satellites
         SpawnSatellites();
 
-        // Now spawn letters AFTER satellites exist
+        // Spawn letters AFTER satellites exist
         wireframeSphere.SpawnLetters();
     }
 

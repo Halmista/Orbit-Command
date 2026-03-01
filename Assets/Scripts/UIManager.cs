@@ -13,7 +13,8 @@ public class UIManager : MonoBehaviour
     public TMP_Text ultimateChargeText;
     public TMP_Text activeMeteorsText;
     public TMP_Text gameOverText;
-    private int destroyedMeteors;
+
+    public int destroyedMeteors;
     private int activeMeteors;   
     
     private const int maxLogLines = 10;

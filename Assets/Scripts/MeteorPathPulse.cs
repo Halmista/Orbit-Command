@@ -25,14 +25,14 @@ public class MeteorPathPulse : MonoBehaviour
 
     void Update()
     {
-        // 🔥 If meteor destroyed → destroy instantly
+        // If meteor destroyed → destroy instantly
         if (trackedMeteor == null)
         {
             Destroy(gameObject);
             return;
         }
 
-        // ⏳ Lifetime timer
+        // Lifetime timer
         timer += Time.deltaTime;
         if (timer >= lifetime)
         {

@@ -18,6 +18,15 @@ public class MeteorSpawner : MonoBehaviour
 
     [Header("Meteor Settings")]
     public float meteorDamage = 10f;
+    public float bigMeteorDamage = 30f;
+
+    [Header("Boss Meteor")]
+    public GameObject bigMeteorPrefab;
+    public float bigMeteorHP = 50f;
+    public float bigMeteorScale = 2f;
+    public float bigMeteorSpeed = 2f;
+
+    private int lastBigSpawnThreshold = 0;
 
     void Start()
     {
@@ -112,7 +121,33 @@ public class MeteorSpawner : MonoBehaviour
         Vector3 targetDir = ((earthCenter.position + randomOffset) - spawnPos).normalized;
 
         // Spawn meteor
-        GameObject meteor = Instantiate(meteorPrefab, spawnPos, Quaternion.identity);
+        //GameObject meteor = Instantiate(meteorPrefab, spawnPos, Quaternion.identity);
+
+        GameObject meteor;
+
+        int destroyed = UIManager.Instance != null
+            ? UIManager.Instance.destroyedMeteors
+            : 0;
+
+        bool spawnBig = false;
+
+        int currentThreshold = destroyed / 20;
+
+        if (currentThreshold > lastBigSpawnThreshold)
+        {
+            spawnBig = true;
+            lastBigSpawnThreshold = currentThreshold;
+        }
+
+        if (spawnBig && bigMeteorPrefab != null)
+        {
+            meteor = Instantiate(bigMeteorPrefab, spawnPos, Quaternion.identity);
+            meteor.transform.localScale *= bigMeteorScale;
+        }
+        else
+        {
+            meteor = Instantiate(meteorPrefab, spawnPos, Quaternion.identity);
+        }
 
         if (UIManager.Instance != null)
         {
@@ -121,7 +156,17 @@ public class MeteorSpawner : MonoBehaviour
         }
 
         Meteor mScript = meteor.GetComponent<Meteor>();
-        mScript.Initialize(targetDir, meteorSpeed, gameplay, meteorDamage, earthCenter.position, gameplay.earthRadius);
+
+        if (spawnBig)
+        {
+            mScript.hp = bigMeteorHP;
+            mScript.maxHP = bigMeteorHP;
+        }
+        float damageToUse = spawnBig ? bigMeteorDamage : meteorDamage;
+        float speedToUse = spawnBig ? bigMeteorSpeed : meteorSpeed;
+        mScript.Initialize(targetDir, speedToUse, gameplay, damageToUse, earthCenter.position, gameplay.earthRadius);
+
+        //mScript.Initialize(targetDir, meteorSpeed, gameplay, meteorDamage, earthCenter.position, gameplay.earthRadius);
 
         DrawMeteorPath(meteor, spawnPos, earthCenter.position);
 
@@ -145,7 +190,8 @@ public class MeteorSpawner : MonoBehaviour
             RingPulse ringPulse = ringObj.GetComponent<RingPulse>();
             if (ringPulse != null)
             {
-                ringPulse.Initialize(meteor.transform, earthCenter, gameplay);
+                float multiplier = spawnBig ? 2f : 1f; // big meteor = double size
+                ringPulse.Initialize(meteor.transform, earthCenter, gameplay, multiplier);
             }
         }
     }

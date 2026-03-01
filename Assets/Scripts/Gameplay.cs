@@ -10,7 +10,8 @@ public class Gameplay : MonoBehaviour
     [Header("Earth Settings")]
     public Transform earthCenter;  // center of the Earth
     public float earthRadius = 1f; // radius of the Earth
-    public float earthHP = 500f;  // starting HP
+    public float maxEarthHP = 500f;  // starting HP
+    public float currentEarthHP;    // current HP
 
     [Header("Ultimate Pulse Settings")]
     public float ultimateChargeTime = 20f; // seconds to recharge
@@ -42,9 +43,10 @@ public class Gameplay : MonoBehaviour
 
     void Start()
     {
+        currentEarthHP = maxEarthHP;
         if (UIManager.Instance != null)
         {
-            UIManager.Instance.UpdateEarthHP(earthHP);
+            UIManager.Instance.UpdateEarthHP(100f);
             UIManager.Instance.UpdateUltimateCharge(100f);
         }
     }
@@ -52,15 +54,16 @@ public class Gameplay : MonoBehaviour
     // Call this when a meteor hits Earth
     public void TakeDamage(float dmg)
     {
-        earthHP -= dmg;
-        if (earthHP < 0f) earthHP = 0f;
+        currentEarthHP -= dmg;
+        if (currentEarthHP < 0f) currentEarthHP = 0f;
+        float hpPercent = (currentEarthHP / maxEarthHP) * 100f;
 
-        Debug.Log($"Earth HP: {earthHP}");
+        Debug.Log($"Earth HP: {currentEarthHP}");
 
         if (UIManager.Instance != null)
-            UIManager.Instance.UpdateEarthHP(earthHP);
+            UIManager.Instance.UpdateEarthHP(hpPercent);
 
-        if (earthHP <= 0f)
+        if (currentEarthHP <= 0f)
         {
             Debug.Log("Earth destroyed! Game Over.");
 

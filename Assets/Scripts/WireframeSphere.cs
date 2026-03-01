@@ -48,9 +48,9 @@ public class WireframeSphere : MonoBehaviour
 
 
         DrawWireframe();
-        CalculateVertices();
-        UpdateVerticesFacingCamera();
-        UpdateLettersFacingCamera();
+        //CalculateVertices();
+        //UpdateVerticesFacingCamera();
+        //UpdateLettersFacingCamera();
     }
 
     void Update()
@@ -65,6 +65,12 @@ public class WireframeSphere : MonoBehaviour
             UpdateVerticesFacingCamera();
             
         }
+    }
+
+    public void SpawnLetters()
+    {
+        UpdateVerticesFacingCamera();
+        UpdateLettersFacingCamera();
     }
 
     void HandleCameraRotated()
@@ -140,7 +146,7 @@ public class WireframeSphere : MonoBehaviour
         Debug.Log($"Wireframe vertices calculated: {worldVertices.Count}");
     }
 
-    void UpdateVerticesFacingCamera()
+    public void UpdateVerticesFacingCamera()
     {
         verticesFacingCamera.Clear();
 
@@ -173,116 +179,116 @@ public class WireframeSphere : MonoBehaviour
             }
         }
     }
-    void UpdateLettersFacingCamera()
-{
-    if (letterPrefab == null || cam == null) return;
-
-    // Destroy existing letters
-    foreach (var pair in activeLabels)
+    public void UpdateLettersFacingCamera()
     {
-        if (pair.Value != null)
-            Destroy(pair.Value);
-    }
-    activeLabels.Clear();
-    letterToVertex.Clear();
+        if (letterPrefab == null || cam == null) return;
 
-    if (verticesFacingCamera.Count == 0)
-        return;
-
-    Vector3 center = transform.position;
-    Vector3 sphereUp = transform.up;
-
-    float poleThreshold = 0.85f; // exclude poles
-    verticesFacingCamera.RemoveAll(v =>
-    {
-        Vector3 dir = (v - center).normalized;
-        float verticalDot = Mathf.Abs(Vector3.Dot(dir, sphereUp));
-        return verticalDot > poleThreshold;
-    });
-
-    if (verticesFacingCamera.Count == 0)
-        return;
-
-    // Remove vertices already occupied by satellites
-    List<Vector3> freeVertices = new List<Vector3>();
-    foreach (var v in verticesFacingCamera)
-    {
-        bool occupied = false;
-        foreach (var sat in SatelliteManager.Instance.satellites)
+        // Destroy existing letters
+        foreach (var pair in activeLabels)
         {
-            if (Vector3.Distance(sat.transform.position, v) < 0.1f) // small tolerance
+            if (pair.Value != null)
+                Destroy(pair.Value);
+        }
+        activeLabels.Clear();
+        letterToVertex.Clear();
+
+        if (verticesFacingCamera.Count == 0)
+            return;
+
+        Vector3 center = transform.position;
+        Vector3 sphereUp = transform.up;
+
+        float poleThreshold = 0.85f; // exclude poles
+        verticesFacingCamera.RemoveAll(v =>
+        {
+            Vector3 dir = (v - center).normalized;
+            float verticalDot = Mathf.Abs(Vector3.Dot(dir, sphereUp));
+            return verticalDot > poleThreshold;
+        });
+
+        if (verticesFacingCamera.Count == 0)
+            return;
+
+        // Remove vertices already occupied by satellites
+        List<Vector3> freeVertices = new List<Vector3>();
+        foreach (var v in verticesFacingCamera)
+        {
+            bool occupied = false;
+            foreach (var sat in SatelliteManager.Instance.satellites)
             {
-                occupied = true;
-                break;
+                if (Vector3.Distance(sat.transform.position, v) < 0.1f) // small tolerance
+                {
+                    occupied = true;
+                    break;
+                }
             }
+
+            if (!occupied)
+                freeVertices.Add(v);
         }
 
-        if (!occupied)
-            freeVertices.Add(v);
-    }
+        if (freeVertices.Count == 0)
+            return;
 
-    if (freeVertices.Count == 0)
-        return;
-
-    // Sort by camera alignment
-    Vector3 camForward = cam.transform.forward;
-    freeVertices.Sort((a, b) =>
-    {
-        float camScoreA = Vector3.Dot(camForward, (a - cam.transform.position).normalized);
-        float camScoreB = Vector3.Dot(camForward, (b - cam.transform.position).normalized);
-        return camScoreB.CompareTo(camScoreA);
-    });
-
-    // Shuffle letters
-    List<char> available = new List<char>(availableLetters);
-    for (int i = 0; i < available.Count; i++)
-    {
-        int randomIndex = Random.Range(i, available.Count);
-        (available[i], available[randomIndex]) = (available[randomIndex], available[i]);
-    }
-
-    int lettersToSpawn = Mathf.Min(letterCount, freeVertices.Count, available.Count);
-
-    List<Vector3> chosenVertices = new List<Vector3>();
-    float minDistance = radius * 0.25f;
-
-    int letterIndex = 0;
-    for (int i = 0; i < freeVertices.Count && letterIndex < lettersToSpawn; i++)
-    {
-        Vector3 candidate = freeVertices[i];
-        bool tooClose = false;
-
-        foreach (var chosen in chosenVertices)
+        // Sort by camera alignment
+        Vector3 camForward = cam.transform.forward;
+        freeVertices.Sort((a, b) =>
         {
-            if (Vector3.Distance(candidate, chosen) < minDistance)
+            float camScoreA = Vector3.Dot(camForward, (a - cam.transform.position).normalized);
+            float camScoreB = Vector3.Dot(camForward, (b - cam.transform.position).normalized);
+            return camScoreB.CompareTo(camScoreA);
+        });
+
+        // Shuffle letters
+        List<char> available = new List<char>(availableLetters);
+        for (int i = 0; i < available.Count; i++)
+        {
+            int randomIndex = Random.Range(i, available.Count);
+            (available[i], available[randomIndex]) = (available[randomIndex], available[i]);
+        }
+
+        int lettersToSpawn = Mathf.Min(letterCount, freeVertices.Count, available.Count);
+
+        List<Vector3> chosenVertices = new List<Vector3>();
+        float minDistance = radius * 0.25f;
+
+        int letterIndex = 0;
+        for (int i = 0; i < freeVertices.Count && letterIndex < lettersToSpawn; i++)
+        {
+            Vector3 candidate = freeVertices[i];
+            bool tooClose = false;
+
+            foreach (var chosen in chosenVertices)
             {
-                tooClose = true;
-                break;
+                if (Vector3.Distance(candidate, chosen) < minDistance)
+                {
+                    tooClose = true;
+                    break;
+                }
             }
+            if (tooClose) continue;
+
+            chosenVertices.Add(candidate);
+
+            GameObject labelObj = Instantiate(letterPrefab, candidate, Quaternion.identity, transform);
+            labelObj.transform.localScale = Vector3.one * letterScale;
+
+            labelObj.transform.LookAt(
+                labelObj.transform.position + cam.transform.forward,
+                cam.transform.up
+            );
+
+            TMP_Text tmp = labelObj.GetComponent<TMP_Text>();
+            if (tmp != null)
+            {
+                char letter = available[letterIndex];
+                tmp.text = letter.ToString();
+                letterToVertex[letter] = candidate;
+            }
+
+            activeLabels.Add(candidate, labelObj);
+            letterIndex++;
         }
-        if (tooClose) continue;
-
-        chosenVertices.Add(candidate);
-
-        GameObject labelObj = Instantiate(letterPrefab, candidate, Quaternion.identity, transform);
-        labelObj.transform.localScale = Vector3.one * letterScale;
-
-        labelObj.transform.LookAt(
-            labelObj.transform.position + cam.transform.forward,
-            cam.transform.up
-        );
-
-        TMP_Text tmp = labelObj.GetComponent<TMP_Text>();
-        if (tmp != null)
-        {
-            char letter = available[letterIndex];
-            tmp.text = letter.ToString();
-            letterToVertex[letter] = candidate;
-        }
-
-        activeLabels.Add(candidate, labelObj);
-        letterIndex++;
     }
-}
 
 }

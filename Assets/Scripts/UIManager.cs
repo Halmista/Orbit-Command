@@ -56,10 +56,10 @@ public class UIManager : MonoBehaviour
         UpdateActiveMeteorsText();
     }
 
-    public void UpdateEarthHP(float hp)
+    public void UpdateEarthHP(float hpPercent)
     {
         if (earthHPText != null)
-            earthHPText.text = $"Earth HP: {hp:F0}";
+            earthHPText.text = $"Earth HP: {hpPercent:F0}%";
     }
 
     public void IncrementDestroyedMeteors()

@@ -29,7 +29,7 @@ public class MeteorSpawner : MonoBehaviour
         while (true)
         {
             // Stop spawning if Earth is destroyed
-            if (gameplay != null && gameplay.earthHP <= 0f)
+            if (gameplay != null && gameplay.currentEarthHP <= 0f)
             {
                 Debug.Log("Earth destroyed. Stopping meteor spawns and clearing meteors.");
 
@@ -65,7 +65,7 @@ public class MeteorSpawner : MonoBehaviour
 
     void SpawnMeteor()
     {
-        if (gameplay != null && gameplay.earthHP <= 0f)
+        if (gameplay != null && gameplay.currentEarthHP <= 0f)
             return;
 
         // Random latitude and longitude

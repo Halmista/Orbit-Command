@@ -8,6 +8,7 @@ public class Gameplay : MonoBehaviour
     public WireframeSphere wireframeSphere; 
 
     [Header("Earth Settings")]
+    public GameObject earthSystem;
     public Transform earthCenter;  // center of the Earth
     public float earthRadius = 1f; // radius of the Earth
     public float maxEarthHP = 500f;  // starting HP
@@ -76,7 +77,7 @@ public class Gameplay : MonoBehaviour
                 if (explosionPrefab != null)
                     Instantiate(explosionPrefab, earthCenter.position, Quaternion.identity);
 
-                Destroy(earthCenter.gameObject);
+                Destroy(earthSystem);
             }
 
             if (SatelliteManager.Instance != null)

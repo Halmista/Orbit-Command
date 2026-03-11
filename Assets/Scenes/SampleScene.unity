@@ -492,16 +492,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 280551662}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1808599044}
+  m_Father: {fileID: 1254670327}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 12}
+  m_AnchoredPosition: {x: 0, y: 37.1}
   m_SizeDelta: {x: 700, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &280551664
@@ -524,18 +524,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GAME OVER
+  m_text: EARTH LOST
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8b28151894d853745a15217c6fea2e1e, type: 2}
-  m_sharedMaterial: {fileID: 5651627365990678533, guid: 8b28151894d853745a15217c6fea2e1e,
+  m_fontAsset: {fileID: 11400000, guid: 6950ed62c1a930247a526763876e56e2, type: 2}
+  m_sharedMaterial: {fileID: 4945125174974670406, guid: 6950ed62c1a930247a526763876e56e2,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279835063
-  m_fontColor: {r: 0.7169812, g: 0.09807763, b: 0.09807763, a: 1}
+    rgba: 4278190087
+  m_fontColor: {r: 0.028301895, g: 0.0014684947, b: 0.0014684947, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -558,7 +558,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 17
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -878,9 +878,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wireframeSphere: {fileID: 2078107130}
+  earthSystem: {fileID: 1045716205}
   earthCenter: {fileID: 1204487061}
   earthRadius: 4
-  maxEarthHP: 500
+  maxEarthHP: 20
   currentEarthHP: 0
   ultimateChargeTime: 30
   ultimateEffectPrefab: {fileID: 1293293901148674788, guid: 93d5ccb606b18ea4fa8eb934913e7c34,
@@ -1193,8 +1194,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4284383962
+  m_fontColor: {r: 0.85490197, g: 0.50980395, b: 0.36862746, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2289,6 +2290,82 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0.5
+--- !u!1 &1254670326
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1254670327}
+  - component: {fileID: 1254670329}
+  - component: {fileID: 1254670328}
+  m_Layer: 5
+  m_Name: GameOverPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1254670327
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254670326}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.000031587282}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 280551663}
+  m_Father: {fileID: 1808599044}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -16.54004}
+  m_SizeDelta: {x: 0, y: -972.92017}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1254670328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254670326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7176471, g: 0.09803922, b: 0.09803922, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1254670329
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254670326}
+  m_CullTransparentMesh: 1
 --- !u!1 &1268163346
 GameObject:
   m_ObjectHideFlags: 0
@@ -3211,7 +3288,7 @@ RectTransform:
   - {fileID: 291858631}
   - {fileID: 1268163347}
   - {fileID: 127006336}
-  - {fileID: 280551663}
+  - {fileID: 1254670327}
   - {fileID: 2096648418}
   - {fileID: 1148875241}
   - {fileID: 1679894246}
@@ -3273,7 +3350,9 @@ MonoBehaviour:
   ultimateChargeText: {fileID: 335052538}
   activeMeteorsText: {fileID: 1689175660}
   gameOverText: {fileID: 280551664}
+  flashSpeed: 3
   restartButton: {fileID: 2096648417}
+  gameOverPanel: {fileID: 1254670326}
   destroyedMeteors: 0
 --- !u!1 &2018935330
 GameObject:
@@ -3614,7 +3693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.854902, g: 0.50980395, b: 0.36862746, a: 1}
+  m_Color: {r: 0.854902, g: 0.50980395, b: 0.36862746, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

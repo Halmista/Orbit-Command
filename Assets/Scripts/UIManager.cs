@@ -14,8 +14,13 @@ public class UIManager : MonoBehaviour
     public TMP_Text ultimateChargeText;
     public TMP_Text activeMeteorsText;
     public TMP_Text gameOverText;
-    
+
+    [Header("Game Over Flash")]
+    public float flashSpeed = 3f;
+    private bool gameOverActive = false;
+
     public GameObject restartButton;
+    public GameObject gameOverPanel;
 
     public int destroyedMeteors;
     private int activeMeteors;   
@@ -30,6 +35,15 @@ public class UIManager : MonoBehaviour
         {
             TogglePause();
         }
+
+        if (gameOverActive && gameOverText != null)
+        {
+            float alpha = Mathf.Abs(Mathf.Sin(Time.unscaledTime * flashSpeed));
+
+            Color c = gameOverText.color;
+            c.a = alpha;
+            gameOverText.color = c;
+        }
     }
 
     void Awake()
@@ -41,8 +55,8 @@ public class UIManager : MonoBehaviour
 
 
         // Hide GameOver text initially
-        if (gameOverText != null)
-            gameOverText.gameObject.SetActive(false);
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
     }
     
     void Start()
@@ -115,11 +129,15 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOver()
     {
-        if (gameOverText != null)
-            gameOverText.gameObject.SetActive(true);
+        if (gameOverPanel != null) {
+            gameOverPanel.SetActive(true);
+            gameOverActive = true;
+        }
 
         if (restartButton != null)
             restartButton.SetActive(true);
+
+        gameOverActive = true;
 
         Time.timeScale = 0f; // Freeze game
     }

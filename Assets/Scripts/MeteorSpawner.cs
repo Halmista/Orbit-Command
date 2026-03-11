@@ -45,13 +45,15 @@ public class MeteorSpawner : MonoBehaviour
                 // Destroy all existing meteors
                 Meteor[] existingMeteors = FindObjectsOfType<Meteor>();
                 foreach (Meteor m in existingMeteors)
-                    Destroy(m.gameObject);
+                    //Destroy(m.gameObject);
+                    m.KillMeteor(true);
 
                 yield break; // stop the coroutine
             }
 
             SpawnMeteor();
-            yield return new WaitForSeconds(spawnInterval);
+            //yield return new WaitForSeconds(spawnInterval);
+            yield return new WaitForSecondsRealtime(spawnInterval);
         }
     }
 

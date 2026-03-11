@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class UIManager : MonoBehaviour
     public TMP_Text ultimateChargeText;
     public TMP_Text activeMeteorsText;
     public TMP_Text gameOverText;
+    
+    public GameObject restartButton;
 
     public int destroyedMeteors;
     private int activeMeteors;   
@@ -41,11 +44,7 @@ public class UIManager : MonoBehaviour
         if (gameOverText != null)
             gameOverText.gameObject.SetActive(false);
     }
-    public void ShowGameOver()
-    {
-        if (gameOverText != null)
-            gameOverText.gameObject.SetActive(true);
-    }
+    
     void Start()
     {
         destroyedMeteors = 0;
@@ -112,6 +111,23 @@ public class UIManager : MonoBehaviour
     {
         if (activeMeteorsText != null)
             activeMeteorsText.text = $"Meteors Incoming: {activeMeteors}";
+    }
+
+    public void ShowGameOver()
+    {
+        if (gameOverText != null)
+            gameOverText.gameObject.SetActive(true);
+
+        if (restartButton != null)
+            restartButton.SetActive(true);
+
+        Time.timeScale = 0f; // Freeze game
+    }
+    public void RestartGame()
+    {
+        Time.timeScale = 1f; // Unfreeze time
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.buildIndex);
     }
 
     public void TogglePause()

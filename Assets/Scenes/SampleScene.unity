@@ -881,7 +881,7 @@ MonoBehaviour:
   earthSystem: {fileID: 1045716205}
   earthCenter: {fileID: 1204487061}
   earthRadius: 4
-  maxEarthHP: 20
+  maxEarthHP: 500
   currentEarthHP: 0
   ultimateChargeTime: 30
   ultimateEffectPrefab: {fileID: 1293293901148674788, guid: 93d5ccb606b18ea4fa8eb934913e7c34,
@@ -907,6 +907,10 @@ MonoBehaviour:
   spawnRadius: 50
   meteorSpeed: 1
   spawnInterval: 5
+  minSpawnInterval: 0.15
+  intervalDecayRate: 0.015
+  baseMaxMeteors: 20
+  meteorsPerMinute: 15
   meteorDamage: 10
   bigMeteorDamage: 30
   bigMeteorPrefab: {fileID: 6201222640186743737, guid: b78c2b9f4d508344bb1027c34b11a503,
@@ -2270,13 +2274,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204487057}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.013749515, y: 0.0018614501, z: -0.13414621, w: 0.9908644}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.6191308, y: 1.1304545, z: 12.612809}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1045716206}
-  m_LocalEulerAnglesHint: {x: 1.59, y: 0, z: -15.42}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1204487062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2289,7 +2293,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb54457f61e4f24fb57244e6b208412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 0.5
+  rotationSpeed: 1
+  axialTilt: 23.4
 --- !u!1 &1254670326
 GameObject:
   m_ObjectHideFlags: 0
@@ -3447,7 +3452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   latitudeLines: 12
   longitudeLines: 20
-  radius: 5
+  radius: 4.7
   lineMaterial: {fileID: 2100000, guid: c0c655ed8349430429fc389a3cc15646, type: 2}
   lineColor: {r: 1, g: 0.54908407, b: 0, a: 1}
   lineWidth: 0.009

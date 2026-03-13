@@ -15,6 +15,17 @@ public class UIManager : MonoBehaviour
     public TMP_Text activeMeteorsText;
     public TMP_Text gameOverText;
 
+    [Header("Survival Timer")]
+    public TMP_Text survivalTimerText;
+
+    private float survivalTime = 0f;
+    //private int lastSecond = -1;
+
+    [Header("Tactical Bars")]
+    public SegmentedBar earthHPBar;
+    public SegmentedBar ultimateBar;
+
+
     [Header("Game Over Flash")]
     public float flashSpeed = 3f;
     private bool gameOverActive = false;
@@ -34,6 +45,12 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePause();
+        }
+
+        if (!gameOverActive)
+        {
+            survivalTime += Time.deltaTime;
+            UpdateSurvivalTimer();
         }
 
         if (gameOverActive && gameOverText != null)
@@ -68,12 +85,17 @@ public class UIManager : MonoBehaviour
         UpdateUltimateCharge(100f);
         UpdateDestroyedText();
         UpdateActiveMeteorsText();
+        UpdateSurvivalTimer();
     }
 
     public void UpdateEarthHP(float hpPercent)
     {
         if (earthHPText != null)
-            earthHPText.text = $"Earth HP: {hpPercent:F0}%";
+            earthHPText.text = $"Earth Integrity: {hpPercent:F0}%";
+
+        if (earthHPBar != null)
+            earthHPBar.SetPercent(hpPercent / 100f);
+
     }
 
     public void IncrementDestroyedMeteors()
@@ -85,7 +107,11 @@ public class UIManager : MonoBehaviour
     public void UpdateUltimateCharge(float percent)
     {
         if (ultimateChargeText != null)
-            ultimateChargeText.text = $"ULTIMATE: {percent:F0}%";
+            ultimateChargeText.text = $"ULTIMATE PULSE CHARGE: {percent:F0}%";
+        
+        if (ultimateBar != null)
+            ultimateBar.SetPercent(percent / 100f);
+
     }
 
     public void LogMeteorSpawn(Vector3 pos)
@@ -100,8 +126,17 @@ public class UIManager : MonoBehaviour
             meteorSpawnLogText.text = string.Join("\n", spawnLogs);
     }
 
-  
+    void UpdateSurvivalTimer()
+    {
+        int minutes = (int)(survivalTime / 60f);
+        int seconds = (int)(survivalTime % 60f);
+        int milliseconds = (int)((survivalTime * 1000f) % 1000f);
 
+        if (survivalTimerText != null)
+        {
+            survivalTimerText.text = $"{minutes:00}:{seconds:00}:{milliseconds:000}";
+        }
+    }
     public void IncrementActiveMeteors()
     {
         activeMeteors++;

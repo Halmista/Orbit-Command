@@ -61,11 +61,11 @@ public class MeteorSpawner : MonoBehaviour
             }
 
             // Active meteor cap scaling with time
-            int maxMeteors = baseMaxMeteors + Mathf.FloorToInt((gameTimer / 60f) * meteorsPerMinute);
+            //int maxMeteors = baseMaxMeteors + Mathf.FloorToInt((gameTimer / 60f) * meteorsPerMinute);
+            int maxMeteors = baseMaxMeteors + Mathf.FloorToInt(Mathf.Sqrt(gameTimer / 30f) * meteorsPerMinute);
 
-            Meteor[] current = FindObjectsOfType<Meteor>();
 
-            if (current.Length < maxMeteors)
+            if (UIManager.Instance.ActiveMeteors < maxMeteors)
             {
                 SpawnMeteor();
             }
@@ -77,10 +77,11 @@ public class MeteorSpawner : MonoBehaviour
                 ? UIManager.Instance.destroyedMeteors
                 : 0;
 
-            float difficultyFromKills = destroyed * 0.002f;
+            //float difficultyFromKills = destroyed * 0.002f;
+            float timeFactor = Mathf.Sqrt(gameTimer) * intervalDecayRate;
+            float killFactor = destroyed * 0.0015f;
 
-            float dynamicInterval = Mathf.Clamp(
-                spawnInterval - difficultyFromTime - difficultyFromKills,
+            float dynamicInterval = Mathf.Clamp(spawnInterval - timeFactor - killFactor,
                 minSpawnInterval,
                 spawnInterval
             );
@@ -116,7 +117,7 @@ public class MeteorSpawner : MonoBehaviour
 
         bool spawnBig = false;
 
-        int currentThreshold = destroyed / 20;
+        int currentThreshold = destroyed / 25;
 
         if (currentThreshold > lastBigSpawnThreshold)
         {
@@ -148,8 +149,19 @@ public class MeteorSpawner : MonoBehaviour
             mScript.maxHP = bigMeteorHP;
         }
 
+        float hpScale = 1f + gameTimer * 0.004f;
+
+        if (!spawnBig)
+        {
+            mScript.maxHP *= hpScale;
+            mScript.hp = mScript.maxHP;
+        }
+
         float damageToUse = spawnBig ? bigMeteorDamage : meteorDamage;
-        float speedToUse = spawnBig ? bigMeteorSpeed : meteorSpeed;
+        //float speedToUse = spawnBig ? bigMeteorSpeed : meteorSpeed;
+        float speedScale = 1f + gameTimer * 0.0025f;
+
+        float speedToUse = spawnBig ? bigMeteorSpeed * speedScale: meteorSpeed * speedScale;
 
         mScript.Initialize(targetDir, speedToUse, gameplay, damageToUse, earthCenter.position, gameplay.earthRadius);
 

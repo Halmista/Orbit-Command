@@ -9,6 +9,9 @@ public class LetterInputController : MonoBehaviour
 
     void Update()
     {
+        if (UIManager.Instance != null && UIManager.Instance.ultimateTypingActive)
+            return;
+
         if (Input.anyKeyDown)
         {
             string input = Input.inputString;

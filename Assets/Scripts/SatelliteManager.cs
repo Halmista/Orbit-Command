@@ -14,7 +14,11 @@ public class SatelliteManager : MonoBehaviour
 
     public void RegisterSatellite(SatelliteShooter sat)
     {
-        satellites.Add(sat);
+        if (!satellites.Contains(sat))
+            satellites.Add(sat);
+
+        if (UIManager.Instance != null)
+            UIManager.Instance.UpdateSatelliteCount(satellites.Count);
     }
 
     public SatelliteShooter GetNearestIdleSatellite(Vector3 targetPos)

@@ -17,14 +17,14 @@ public class SatelliteShooter : MonoBehaviour
     private WireframeSphere sphere;
     private float fireTimer;
 
-    void Start()
+    void Awake()
     {
         // Cache the sphere
         sphere = FindObjectOfType<WireframeSphere>();
 
-        // Register satellite
+        //Register satellite
         if (SatelliteManager.Instance != null)
-            SatelliteManager.Instance.RegisterSatellite(this);
+           SatelliteManager.Instance.RegisterSatellite(this);
     }
 
     void Update()

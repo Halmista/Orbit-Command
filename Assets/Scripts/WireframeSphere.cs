@@ -281,8 +281,18 @@ public class WireframeSphere : MonoBehaviour
             TMP_Text tmp = labelObj.GetComponent<TMP_Text>();
             if (tmp != null)
             {
+                //char letter = available[letterIndex];
+                //tmp.text = letter.ToString();
+                //letterToVertex[letter] = candidate;
+                tmp.fontSize = 6; // increase base size
+                tmp.color = Color.white;
+
+                tmp.outlineWidth = 0.3f;
+                tmp.outlineColor = Color.black;
+
                 char letter = available[letterIndex];
                 tmp.text = letter.ToString();
+
                 letterToVertex[letter] = candidate;
             }
 

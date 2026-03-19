@@ -75,12 +75,13 @@ public class Meteor : MonoBehaviour
 
         if (r != null)
         {
-            float height = r.bounds.extents.y;
+            //float height = r.bounds.extents.y;
+            float height = r.bounds.max.y - transform.position.y;
             root.transform.localPosition = Vector3.up * (height + 0.8f);
         }
         else
         {
-            root.transform.localPosition = Vector3.up * 1.5f; // fallback
+            root.transform.localPosition = Vector3.up * 1f; // fallback
         }
 
 
@@ -90,7 +91,8 @@ public class Meteor : MonoBehaviour
         GameObject bg = GameObject.CreatePrimitive(PrimitiveType.Quad);
         bg.transform.SetParent(root.transform);
         bg.transform.localPosition = Vector3.zero;
-        bg.transform.localScale = new Vector3(1.2f, 0.2f, 1f);
+        //bg.transform.localScale = new Vector3(1.2f, 0.2f, 1f);
+        bg.transform.localScale = new Vector3(1f, 0.2f, 1f);
 
         Material bgMat = new Material(Shader.Find("Unlit/Color"));
         bgMat.color = new Color(0, 0, 0, 0.6f);
@@ -99,8 +101,10 @@ public class Meteor : MonoBehaviour
         // Fill
         GameObject fill = GameObject.CreatePrimitive(PrimitiveType.Quad);
         fill.transform.SetParent(root.transform);
-        fill.transform.localPosition = new Vector3(-0.1f, 0f, -0.01f);
+        //fill.transform.localPosition = new Vector3(-0.1f, 0f, -0.01f);
         fill.transform.localScale = new Vector3(1f, 0.15f, 1f);
+        fill.transform.localPosition = new Vector3(0f, 0f, -0.01f);
+        //fill.transform.localScale = new Vector3(1f, 0.15f, 1f);
 
         Material fillMat = new Material(Shader.Find("Unlit/Color"));
         fillMat.color = Color.green;
@@ -117,20 +121,13 @@ public class Meteor : MonoBehaviour
     {
         float percent = Mathf.Clamp01(hp / maxHP);
 
-        // Shrink horizontally
         healthBarFill.localScale = new Vector3(percent, 0.15f, 1f);
+        healthBarFill.localPosition = new Vector3(-(1f - percent) * 0.5f, 0f, -0.01f);
 
-        // Adjust position so it shrinks from left to right
-        healthBarFill.localPosition = new Vector3(
-            -0.5f + percent * 0.5f,
-            0f,
-            -0.01f
-        );
-
-        // Color change (green → yellow → red)
         Color color = Color.Lerp(Color.red, Color.green, percent);
         healthBarFill.GetComponent<MeshRenderer>().material.color = color;
     }
+
     public void KillMeteor(bool destroyedByPlayer)
     {
         if (UIManager.Instance != null)
@@ -144,7 +141,19 @@ public class Meteor : MonoBehaviour
         {
             Instantiate(shockwavePrefab, transform.position, Quaternion.identity);
         }
+
+        if (XPManager.Instance != null)
+        {
+            float xp = 5f;
+
+            if (maxHP > 30f) // big meteor
+                xp = 20f;
+
+            XPManager.Instance.AddXP(xp);
+        }
         Destroy(gameObject);
+        //MeteorKillTracker.Instance.AddKill();
+        //UpgradeManager.Instance.RegisterMeteorKill();
 
         if (impactRing != null)
             Destroy(impactRing);

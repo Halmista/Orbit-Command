@@ -14,6 +14,15 @@ public class UIManager : MonoBehaviour
     public TMP_Text ultimateChargeText;
     public TMP_Text activeMeteorsText;
     public TMP_Text gameOverText;
+    public TMP_Text satelliteCountText;
+
+    [Header("XP UI")]
+    public UnityEngine.UI.Slider xpBar;
+
+    [Header("Ultimate Typing Prompt")]
+    public GameObject ultimatePromptPanel;
+    public TMP_Text ultimatePromptText;
+    public TMP_Text ultimateTypedText;
 
     [Header("Survival Timer")]
     public TMP_Text survivalTimerText;
@@ -32,10 +41,15 @@ public class UIManager : MonoBehaviour
 
     public GameObject restartButton;
     public GameObject gameOverPanel;
+    public GameObject ultimateOverlay;
 
     public int destroyedMeteors;
-    private int activeMeteors;   
-    
+    //private int activeMeteors;
+    [SerializeField] private int activeMeteors;
+    public int ActiveMeteors => activeMeteors;
+
+    public bool ultimateTypingActive = false;
+
     private const int maxLogLines = 10;
     private bool isPaused = false;
     private readonly System.Collections.Generic.Queue<string> spawnLogs = new();
@@ -149,7 +163,6 @@ public class UIManager : MonoBehaviour
         if (activeMeteors < 0) activeMeteors = 0;
         UpdateActiveMeteorsText();
     }
-
     private void UpdateDestroyedText()
     {
         if (meteorsDestroyedText != null)
@@ -162,6 +175,17 @@ public class UIManager : MonoBehaviour
             activeMeteorsText.text = $"Meteors Incoming: {activeMeteors}";
     }
 
+    public void UpdateSatelliteCount(int count)
+    {
+        if (satelliteCountText != null)
+            satelliteCountText.text = $"Satellites Active: {count}";
+    }
+
+    public void UpdateXPBar(float percent)
+    {
+        if (xpBar != null)
+            xpBar.value = percent;
+    }
     public void ShowGameOver()
     {
         if (gameOverPanel != null) {
@@ -192,6 +216,67 @@ public class UIManager : MonoBehaviour
 
         Time.timeScale = isPaused ? 0f : 1f;
     }
+
+    public void ShowUltimatePrompt(string sequence)
+    {
+        ultimateTypingActive = true;
+
+        if (ultimateOverlay != null)
+            ultimateOverlay.SetActive(true);
+
+        if (ultimatePromptPanel != null)
+            ultimatePromptPanel.SetActive(true);
+
+        if (ultimatePromptText != null)
+        {
+            string spaced = "";
+            foreach (char c in sequence)
+                spaced += c + " ";
+
+            ultimatePromptText.text = spaced.Trim();
+        }
+
+        if (ultimateTypedText != null)
+            ultimateTypedText.text = "";
+    }
+
+    public void UpdateUltimateInput(string typed)
+    {
+        if (ultimatePromptText == null) return;
+
+        string sequence = ultimatePromptText.text.Replace("<color=#00FFFF>", "")
+                                                 .Replace("</color>", "")
+                                                 .Replace(" ", "");
+
+        string result = "";
+
+        for (int i = 0; i < sequence.Length; i++)
+        {
+            char c = sequence[i];
+
+            if (i < typed.Length)
+                result += $"<color=#00FFFF>{c}</color> ";
+            else
+                result += c + " ";
+        }
+
+        ultimatePromptText.text = result.Trim();
+    }
+
+    public void HideUltimatePrompt()
+    {
+        ultimateTypingActive = false;
+
+        if (ultimateOverlay != null)
+            ultimateOverlay.SetActive(false);
+
+        if (ultimatePromptPanel != null)
+            ultimatePromptPanel.SetActive(false);
+    }
+
+
+
+
     public void QuitGame()
     {
         Debug.Log("Quitting Game...");

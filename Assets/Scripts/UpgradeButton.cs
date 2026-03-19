@@ -1,24 +1,18 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UpgradeButton : MonoBehaviour
 {
-    public TextMeshProUGUI titleText;
-    public TextMeshProUGUI descText;
+    public TMP_Text label;
+    private UpgradeOption option;
 
-    UpgradeSO upgrade;
-
-    public void Setup(UpgradeSO data)
+    public void Setup(UpgradeOption newOption)
     {
-        upgrade = data;
-        titleText.text = data.upgradeName;
-        descText.text = data.description;
-    }
+        option = newOption;
+        label.text = newOption.name;
 
-    public void ChooseUpgrade()
-    {
-       // UpgradeManager.Instance.ApplyUpgrade(upgrade);
-        Time.timeScale = 1f;
-        transform.parent.gameObject.SetActive(false);
+        GetComponent<Button>().onClick.RemoveAllListeners();
+        GetComponent<Button>().onClick.AddListener(() => option.action.Invoke());
     }
 }

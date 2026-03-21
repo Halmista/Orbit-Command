@@ -47,14 +47,17 @@ public class GameAnalyticsManager : MonoBehaviour
     public void FunnelFinished(int stepNumer, string stepName)
     {
         string startStepName = "finishStepNum_" + stepNumer.ToString();
-        if (!PlayerPrefs.HasKey(startStepName))
-        {
+
+        //Commented out check to see if unique progression event
+
+        //if (!PlayerPrefs.HasKey(startStepName))
+        //{
             string missionFinalName = stepNumer.ToString() + " " + stepName;
             LogMissionComplete(missionFinalName);
             GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, missionFinalName);
             Debug.Log("funnel event: " + missionFinalName);
             PlayerPrefs.SetInt(startStepName, 1);
-        }
+        //}
     }
 
 

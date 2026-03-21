@@ -23,8 +23,9 @@ public class Gameplay : MonoBehaviour
     public int ultimateLetters = 6;
     public float typingTimeLimit = 5f;
 
-    //[Header("Game Analytics Function Injector")]
+    [Header("Game Analytics Function Injector and variables")]
     //public UnityEvent funnelSystem;
+    private bool gameRunning = false;
 
     private string ultimateSequence;
     private string playerInput = "";
@@ -37,6 +38,13 @@ public class Gameplay : MonoBehaviour
 
     void Update()
     {
+        if (!gameRunning)
+        {
+            //GameAnalytics Game_Run tracker
+            GameAnalyticsManager.instance.FunnelFinished(1, "Game_Ran");
+            gameRunning = true;
+        }
+
         if (wireframeSphere == null)
         {
             Debug.LogWarning("WireframeSphere reference not set!");
@@ -66,8 +74,6 @@ public class Gameplay : MonoBehaviour
             UIManager.Instance.UpdateUltimateCharge(100f);
         }
 
-        //GameAnalytics Game_Run tracker
-        GameAnalyticsManager.instance.FunnelFinished(1, "Game_Ran");
     }
 
     void Awake()
@@ -222,9 +228,6 @@ public class Gameplay : MonoBehaviour
         foreach (var meteor in meteors)
             meteor.KillMeteor(true);
 
-        StartCoroutine(FinishUltimate());
-
-
         /*
           
           
@@ -234,6 +237,9 @@ public class Gameplay : MonoBehaviour
         */
 
         GameAnalyticsManager.instance.FunnelFinished(2, "Used_Ultimate");
+
+        StartCoroutine(FinishUltimate());
+
 
     }
 

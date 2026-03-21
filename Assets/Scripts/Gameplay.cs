@@ -71,8 +71,10 @@ public class Gameplay : MonoBehaviour
         currentEarthHP = maxEarthHP;
         if (UIManager.Instance != null)
         {
+            
             UIManager.Instance.UpdateEarthHP(100f);
             UIManager.Instance.UpdateUltimateCharge(100f);
+            
         }
     }
 
@@ -198,7 +200,7 @@ public class Gameplay : MonoBehaviour
     void FailUltimate()
     {
         Debug.Log("Ultimate failed!");
-
+        GameAnalyticsManager.Instance?.LogUltimateFail();
         awaitingUltimateInput = false;
 
         // Restore time
@@ -215,6 +217,10 @@ public class Gameplay : MonoBehaviour
     {
         Debug.Log("Ultimate Pulse Activated!");
         ultimateReady = false;
+        if (GameAnalyticsManager.Instance != null)
+        {
+            GameAnalyticsManager.Instance.LogUltimateUsed();
+        }
 
         if (UpgradeManager.Instance != null)
             UpgradeManager.Instance.suppressUpgradePanel = true;

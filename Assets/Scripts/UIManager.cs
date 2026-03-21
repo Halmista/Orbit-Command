@@ -64,6 +64,18 @@ public class UIManager : MonoBehaviour
             TogglePause();
         }
 
+        // Resume with R if paused
+        if (isPaused && Input.GetKeyDown(KeyCode.R))
+        {
+            TogglePause(); // Unpause
+        }
+
+        // Quit with Q if paused
+        if (isPaused && Input.GetKeyDown(KeyCode.Q))
+        {
+            QuitGame();
+        }
+
         if (!gameOverActive)
         {
             survivalTime += Time.deltaTime;
@@ -212,6 +224,7 @@ public class UIManager : MonoBehaviour
             restartButton.SetActive(true);
 
         gameOverActive = true;
+        GameAnalyticsManager.Instance?.EndRun(survivalTime, ActiveMeteors, quit: false);
 
         Time.timeScale = 0f; // Freeze game
     }
@@ -230,6 +243,10 @@ public class UIManager : MonoBehaviour
             pausePanel.SetActive(isPaused);
 
         Time.timeScale = isPaused ? 0f : 1f;
+
+        // Optional: unlock cursor when paused
+        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = isPaused;
     }
 
     public void ShowUltimatePrompt(string sequence)
@@ -292,6 +309,7 @@ public class UIManager : MonoBehaviour
 
     public void QuitGame()
     {
+        GameAnalyticsManager.Instance?.EndRun(survivalTime, ActiveMeteors, quit: true);
         Debug.Log("Quitting Game...");
         Application.Quit();
     }

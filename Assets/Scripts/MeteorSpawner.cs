@@ -34,6 +34,7 @@ public class MeteorSpawner : MonoBehaviour
 
     private int lastBigSpawnThreshold = 0;
     private float gameTimer = 0f;
+    public Material lineMaterial;
 
     void Start()
     {
@@ -91,7 +92,8 @@ public class MeteorSpawner : MonoBehaviour
                 spawnInterval
             );
 
-            yield return new WaitForSeconds(dynamicInterval);
+            //yield return new WaitForSeconds(dynamicInterval);
+            yield return new WaitForSecondsRealtime(dynamicInterval);
         }
     }
 
@@ -211,7 +213,14 @@ public class MeteorSpawner : MonoBehaviour
         lr.startWidth = 0.05f;
         lr.endWidth = 0.01f;
 
-        lr.material = new Material(Shader.Find("Unlit/Texture"));
+        if (lineMaterial != null)
+        {
+            lr.material = lineMaterial;
+        }
+        else
+        {
+            Debug.LogError("Line material not assigned!");
+        }
         lr.material.mainTexture = GenerateDashedTexture();
         lr.textureMode = LineTextureMode.Tile;
 

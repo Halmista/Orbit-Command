@@ -53,6 +53,7 @@ public class UpgradeManager : MonoBehaviour
         {
             UpgradeOption option = shuffled[i];
             upgradeButtons[i].Setup(option);
+            //GameAnalyticsManager.Instance?.LogUpgradeOffered(option.name);
         }
     }
 
@@ -100,24 +101,32 @@ public class UpgradeManager : MonoBehaviour
 
     public void AddSatellite()
     {
+        //GameAnalyticsManager.Instance?.LogUpgradeSelected("AddSatellite");
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("AddSatellite");
         SatelliteSpawner.Instance.SpawnExtraSatellite();
         ResumeGame();
     }
 
     public void AddBounce()
     {
+        //GameAnalyticsManager.Instance?.LogUpgradeSelected("LaserBounce");
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("LaserBounce");
         LaserStats.bounces += 1;
         ResumeGame();
     }
 
     public void AddDamage()
     {
+        //GameAnalyticsManager.Instance?.LogUpgradeSelected("LaserDamage");
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("LaserDamage");
         LaserStats.damage += 5;
         ResumeGame();
     }
 
     public void AddMaxHealth()
     {
+        //GameAnalyticsManager.Instance?.LogUpgradeSelected("MaxHealth");
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("MaxHealth");
         Gameplay.Instance.maxEarthHP += 50f;
         Gameplay.Instance.currentEarthHP += 50f;
 
@@ -132,6 +141,8 @@ public class UpgradeManager : MonoBehaviour
 
     public void HealEarth()
     {
+        //GameAnalyticsManager.Instance?.LogUpgradeSelected("HealEarth");
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("HealEarth");
         Gameplay g = Gameplay.Instance;
 
         float healAmount = g.maxEarthHP * 0.2f;
@@ -148,12 +159,16 @@ public class UpgradeManager : MonoBehaviour
 
     public void FasterUltimate()
     {
+        //GameAnalyticsManager.Instance?.LogUpgradeSelected("FasterUltimate");
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("FasterUltimate");
         Gameplay.Instance.ultimateChargeTime *= 0.8f;
         ResumeGame();
     }
 
     public void ReduceUltimateLetters()
     {
+        //GameAnalyticsManager.Instance?.LogUpgradeSelected("ReduceUltimateLetters");
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("ReduceUltimateLetters");
         Gameplay.Instance.ultimateLetters =
             Mathf.Max(3, Gameplay.Instance.ultimateLetters - 1);
 

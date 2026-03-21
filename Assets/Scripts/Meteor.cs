@@ -134,7 +134,7 @@ public class Meteor : MonoBehaviour
         {
             UIManager.Instance.DecrementActiveMeteors();
 
-            if (destroyedByPlayer)
+            //if (destroyedByPlayer)
                 UIManager.Instance.IncrementDestroyedMeteors();
         }
         if (shockwavePrefab != null)

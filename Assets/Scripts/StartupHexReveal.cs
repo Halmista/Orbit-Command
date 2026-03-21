@@ -13,6 +13,7 @@ public class StartupHexReveal : MonoBehaviour
     {
         Time.timeScale = 0f;
         StartCoroutine(RevealEarth());
+        GameAnalyticsManager.Instance?.StartRun();
     }
 
     IEnumerator RevealEarth()

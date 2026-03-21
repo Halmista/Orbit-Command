@@ -75,7 +75,7 @@ public class Meteor : MonoBehaviour
 
         if (r != null)
         {
-            //float height = r.bounds.extents.y;
+            
             float height = r.bounds.max.y - transform.position.y;
             root.transform.localPosition = Vector3.up * (height + 0.8f);
         }
@@ -101,10 +101,10 @@ public class Meteor : MonoBehaviour
         // Fill
         GameObject fill = GameObject.CreatePrimitive(PrimitiveType.Quad);
         fill.transform.SetParent(root.transform);
-        //fill.transform.localPosition = new Vector3(-0.1f, 0f, -0.01f);
+        
         fill.transform.localScale = new Vector3(1f, 0.15f, 1f);
         fill.transform.localPosition = new Vector3(0f, 0f, -0.01f);
-        //fill.transform.localScale = new Vector3(1f, 0.15f, 1f);
+        
 
         Material fillMat = new Material(Shader.Find("Unlit/Color"));
         fillMat.color = Color.green;

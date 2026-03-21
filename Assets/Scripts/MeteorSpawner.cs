@@ -49,6 +49,11 @@ public class MeteorSpawner : MonoBehaviour
     {
         while (true)
         {
+            if (Time.timeScale == 0f)
+            {
+                yield return null;
+                continue;
+            }
             if (gameplay != null && gameplay.currentEarthHP <= 0f)
             {
                 Debug.Log("Earth destroyed. Clearing meteors.");
@@ -86,7 +91,7 @@ public class MeteorSpawner : MonoBehaviour
                 spawnInterval
             );
 
-            yield return new WaitForSecondsRealtime(dynamicInterval);
+            yield return new WaitForSeconds(dynamicInterval);
         }
     }
 

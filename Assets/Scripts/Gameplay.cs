@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Gameplay : MonoBehaviour
@@ -14,6 +15,9 @@ public class Gameplay : MonoBehaviour
     public float maxEarthHP = 500f;  // starting HP
     public float currentEarthHP;    // current HP
 
+    [Header("Lightning Mode")]
+    public bool isLightningMode = false;
+
     [Header("Ultimate Pulse Settings")]
     public float ultimateChargeTime = 20f; // seconds to recharge
     public GameObject ultimateEffectPrefab; // visual effect for the pulse
@@ -21,6 +25,13 @@ public class Gameplay : MonoBehaviour
     [Header("Ultimate Typing Challenge")]
     public int ultimateLetters = 6;
     public float typingTimeLimit = 5f;
+
+    public List<Meteor> lightningTargets = new List<Meteor>();
+    public Dictionary<char, Meteor> lightningLetterMap = new Dictionary<char, Meteor>();
+    public List<Meteor> selectedMeteors = new List<Meteor>();
+
+    public GameObject lightningLetterPrefab;
+    private List<GameObject> activeLightningLabels = new List<GameObject>();
 
     private string ultimateSequence;
     private string playerInput = "";
@@ -51,6 +62,28 @@ public class Gameplay : MonoBehaviour
         {
             HandleUltimateTyping();
         }
+
+        /*if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (!isLightningMode)
+            {
+                EnterLightningMode();
+            }
+            else
+            {
+                ExecuteLightning();
+            }
+        }
+
+        // SPACE still works for ultimate
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (ultimateReady && !awaitingUltimateInput && !isLightningMode)
+            {
+                StartUltimateTyping();
+            }
+        }*/
+
     }
 
     void Start()
@@ -213,17 +246,25 @@ public class Gameplay : MonoBehaviour
         Meteor[] meteors = FindObjectsOfType<Meteor>();
 
         foreach (var meteor in meteors)
-            meteor.KillMeteor(true);
+            meteor.KillMeteor(false);
 
         StartCoroutine(FinishUltimate());
     }
 
     IEnumerator FinishUltimate()
     {
-        yield return new WaitForSeconds(1.5f); // duration of explosion
+        yield return new WaitForSeconds(1.5f);
 
         if (UpgradeManager.Instance != null)
+        {
             UpgradeManager.Instance.suppressUpgradePanel = false;
+
+            // Only trigger ONCE after ultimate
+            if (UpgradeManager.Instance.HasQueuedUpgrade())
+            {
+                UpgradeManager.Instance.ConsumeQueuedUpgrade();
+            }
+        }
 
         StartCoroutine(UltimateRechargeRoutine());
     }
@@ -269,4 +310,8 @@ public class Gameplay : MonoBehaviour
 
         Debug.Log("Ultimate Pulse Ready!");
     }
+
+
+
+
 }

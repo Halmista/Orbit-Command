@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ public class UpgradeManager : MonoBehaviour
     //private int killsRequired = 20;
 
     public bool suppressUpgradePanel = false;
+    bool upgradeQueued = false;
 
     private List<UpgradeOption> allUpgrades = new List<UpgradeOption>();
 
@@ -66,10 +67,42 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    public void TriggerUpgrade()
+    {
+        // If already showing upgrade, ignore
+        if (upgradePanel.activeSelf)
+            return;
+
+        if (suppressUpgradePanel)
+        {
+            upgradeQueued = true;
+            return;
+        }
+
+        ShowUpgradeChoices();
+    }
     void ResumeGame()
     {
         upgradePanel.SetActive(false);
         Time.timeScale = 1f;
+
+        // If something queued while panel was open, show next
+        if (upgradeQueued)
+        {
+            upgradeQueued = false;
+            ShowUpgradeChoices();
+        }
+    }
+
+    public bool HasQueuedUpgrade()
+    {
+        return upgradeQueued;
+    }
+
+    public void ConsumeQueuedUpgrade()
+    {
+        upgradeQueued = false;
+        ShowUpgradeChoices();
     }
 
     // ----------------------
@@ -122,6 +155,7 @@ public class UpgradeManager : MonoBehaviour
 
         ResumeGame();
     }
+
 
     public void FasterUltimate()
     {

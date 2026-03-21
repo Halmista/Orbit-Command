@@ -59,6 +59,43 @@ public class SegmentedBar : MonoBehaviour
         }
     }
 
+    /*void GenerateSegments()
+    {
+        float radius = 100f;
+
+        float totalAngle = 270f;
+        float startAngle = -135f;
+        float angleStep = totalAngle / totalSegments;
+
+        for (int i = 0; i < totalSegments; i++)
+        {
+            GameObject seg = Instantiate(segmentPrefab, segmentContainer);
+            Image img = seg.GetComponent<Image>();
+
+            float angleDeg = startAngle + i * angleStep;
+            float angleRad = angleDeg * Mathf.Deg2Rad;
+
+            Vector2 pos = new Vector2(
+                Mathf.Cos(angleRad),
+                Mathf.Sin(angleRad)
+            ) * radius;
+
+            RectTransform rt = seg.GetComponent<RectTransform>();
+            rt.anchoredPosition = pos;
+
+            // ✅ FIXED ROTATION
+            rt.rotation = Quaternion.Euler(0, 0, angleDeg - 90f);
+
+            float t = i / (float)totalSegments;
+            Color col = Color.Lerp(startColor, endColor, t);
+
+            img.color = col;
+
+            segments.Add(img);
+            baseColors.Add(col);
+        }
+    }*/
+
     public void SetPercent(float percent)
     {
         currentPercent = Mathf.Clamp01(percent);

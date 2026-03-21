@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,7 +18,9 @@ public class UIManager : MonoBehaviour
     public TMP_Text satelliteCountText;
 
     [Header("XP UI")]
-    public UnityEngine.UI.Slider xpBar;
+    public RectTransform xpFill;
+    public Image xpFillImage;
+
 
     [Header("Ultimate Typing Prompt")]
     public GameObject ultimatePromptPanel;
@@ -33,6 +36,7 @@ public class UIManager : MonoBehaviour
     [Header("Tactical Bars")]
     public SegmentedBar earthHPBar;
     public SegmentedBar ultimateBar;
+    public SegmentedBar xpSegmentedBar;
 
 
     [Header("Game Over Flash")]
@@ -105,7 +109,7 @@ public class UIManager : MonoBehaviour
     public void UpdateEarthHP(float hpPercent)
     {
         if (earthHPText != null)
-            earthHPText.text = $"Earth Integrity: {hpPercent:F0}%";
+            earthHPText.text = $"{hpPercent:F0}%";
 
         if (earthHPBar != null)
             earthHPBar.SetPercent(hpPercent / 100f);
@@ -121,7 +125,7 @@ public class UIManager : MonoBehaviour
     public void UpdateUltimateCharge(float percent)
     {
         if (ultimateChargeText != null)
-            ultimateChargeText.text = $"ULTIMATE PULSE CHARGE: {percent:F0}%";
+            ultimateChargeText.text = $"{percent:F0}%";
         
         if (ultimateBar != null)
             ultimateBar.SetPercent(percent / 100f);
@@ -183,9 +187,21 @@ public class UIManager : MonoBehaviour
 
     public void UpdateXPBar(float percent)
     {
-        if (xpBar != null)
-            xpBar.value = percent;
+        percent = Mathf.Clamp01(percent);
+
+        
+        xpFill.localScale = new Vector3(percent, 1f, 1f);
+
+        
+        xpFill.anchoredPosition = new Vector2(-(1f - percent) * 0.5f * xpFill.rect.width, 0f);
+
+        // Gradient color
+        if (xpFillImage != null)
+        {
+            xpFillImage.color = Color.Lerp(Color.yellow, Color.cyan, percent);
+        }
     }
+
     public void ShowGameOver()
     {
         if (gameOverPanel != null) {
@@ -273,8 +289,6 @@ public class UIManager : MonoBehaviour
         if (ultimatePromptPanel != null)
             ultimatePromptPanel.SetActive(false);
     }
-
-
 
 
     public void QuitGame()

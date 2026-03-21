@@ -12,6 +12,12 @@ public class LetterInputController : MonoBehaviour
         if (UIManager.Instance != null && UIManager.Instance.ultimateTypingActive)
             return;
 
+        /*if (Gameplay.Instance != null && Gameplay.Instance.isLightningMode)
+        {
+            HandleLightningInput();
+            return; // 🚨 stop normal satellite input
+        }*/
+
         if (Input.anyKeyDown)
         {
             string input = Input.inputString;
@@ -74,4 +80,27 @@ public class LetterInputController : MonoBehaviour
         }
         tmp.color = originalColor;
     }
+
+    /*void HandleLightningInput()
+    {
+        string input = Input.inputString.ToUpper();
+
+        foreach (char c in input)
+        {
+            if (Gameplay.Instance.lightningLetterMap.ContainsKey(c))
+            {
+                Meteor m = Gameplay.Instance.lightningLetterMap[c];
+
+                if (!Gameplay.Instance.selectedMeteors.Contains(m))
+                {
+                    Gameplay.Instance.selectedMeteors.Add(m);
+
+                    // Optional highlight
+                    Renderer r = m.GetComponentInChildren<Renderer>();
+                    if (r != null)
+                        r.material.color = Color.cyan;
+                }
+            }
+        }
+    }*/
 }

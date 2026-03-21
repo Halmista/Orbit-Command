@@ -144,16 +144,15 @@ public class Meteor : MonoBehaviour
 
         if (XPManager.Instance != null)
         {
-            float xp = 5f;
+            float xpMultiplier = destroyedByPlayer ? 1f : 0.5f;
 
-            if (maxHP > 30f) // big meteor
-                xp = 20f;
+            float xp = Mathf.Clamp(maxHP * 0.5f, 3f, 25f) * xpMultiplier;
 
             XPManager.Instance.AddXP(xp);
         }
+
         Destroy(gameObject);
-        //MeteorKillTracker.Instance.AddKill();
-        //UpgradeManager.Instance.RegisterMeteorKill();
+        
 
         if (impactRing != null)
             Destroy(impactRing);

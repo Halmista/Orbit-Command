@@ -69,7 +69,7 @@ public class Meteor : MonoBehaviour
         // Root object
         GameObject root = new GameObject("HealthBar");
         root.transform.SetParent(transform);
-        //root.transform.localPosition = Vector3.up * 1.3f;
+      
 
         Renderer r = GetComponentInChildren<Renderer>();
 

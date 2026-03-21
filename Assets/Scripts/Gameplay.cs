@@ -63,27 +63,7 @@ public class Gameplay : MonoBehaviour
             HandleUltimateTyping();
         }
 
-        /*if (Input.GetKeyDown(KeyCode.Return))
-        {
-            if (!isLightningMode)
-            {
-                EnterLightningMode();
-            }
-            else
-            {
-                ExecuteLightning();
-            }
-        }
-
-        // SPACE still works for ultimate
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (ultimateReady && !awaitingUltimateInput && !isLightningMode)
-            {
-                StartUltimateTyping();
-            }
-        }*/
-
+       
     }
 
     void Start()

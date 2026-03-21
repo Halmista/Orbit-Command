@@ -48,7 +48,6 @@ public class UIManager : MonoBehaviour
     public GameObject ultimateOverlay;
 
     public int destroyedMeteors;
-    //private int activeMeteors;
     [SerializeField] private int activeMeteors;
     public int ActiveMeteors => activeMeteors;
 

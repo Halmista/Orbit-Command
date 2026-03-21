@@ -12,11 +12,7 @@ public class LetterInputController : MonoBehaviour
         if (UIManager.Instance != null && UIManager.Instance.ultimateTypingActive)
             return;
 
-        /*if (Gameplay.Instance != null && Gameplay.Instance.isLightningMode)
-        {
-            HandleLightningInput();
-            return; // 🚨 stop normal satellite input
-        }*/
+    
 
         if (Input.anyKeyDown)
         {

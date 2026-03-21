@@ -8,7 +8,7 @@ public class XPManager : MonoBehaviour
     public float xpToNextLevel = 40f;
     public int level = 1;
 
-    public float xpGrowth = 1.5f; // how fast levels scale
+    public float xpGrowth = 1.5f; //how fast levels scale
 
     void Awake()
     {

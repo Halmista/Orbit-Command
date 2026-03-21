@@ -34,18 +34,7 @@ public class UpgradeManager : MonoBehaviour
         allUpgrades.Add(new UpgradeOption("Reduced Ultimate Letters", ReduceUltimateLetters));
     }
 
-    /*public void RegisterMeteorKill()
-    {
-        killsSinceUpgrade++;
-
-        if (killsSinceUpgrade >= killsRequired)
-        {
-            killsSinceUpgrade = 0;
-
-            if (!suppressUpgradePanel)
-                ShowUpgradeChoices();
-        }
-    }*/
+    
 
     public void ShowUpgradeChoices()
     {

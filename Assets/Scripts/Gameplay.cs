@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Gameplay : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class Gameplay : MonoBehaviour
     [Header("Ultimate Typing Challenge")]
     public int ultimateLetters = 6;
     public float typingTimeLimit = 5f;
+
+    //[Header("Game Analytics Function Injector")]
+    //public UnityEvent funnelSystem;
 
     private string ultimateSequence;
     private string playerInput = "";
@@ -61,6 +65,9 @@ public class Gameplay : MonoBehaviour
             UIManager.Instance.UpdateEarthHP(100f);
             UIManager.Instance.UpdateUltimateCharge(100f);
         }
+
+        //GameAnalytics Game_Run tracker
+        GameAnalyticsManager.instance.FunnelFinished(1, "Game_Ran");
     }
 
     void Awake()
@@ -216,6 +223,18 @@ public class Gameplay : MonoBehaviour
             meteor.KillMeteor(true);
 
         StartCoroutine(FinishUltimate());
+
+
+        /*
+          
+          
+          CHECKING CODE FOR GAME ANALYTICS Implementation!!!!!
+         
+         
+        */
+
+        GameAnalyticsManager.instance.FunnelFinished(2, "Used_Ultimate");
+
     }
 
     IEnumerator FinishUltimate()

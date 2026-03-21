@@ -913,7 +913,13 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Legacy Analytics: 0
+    Purchasing: 0
+    UDP: 0
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -933,11 +939,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: fb1aed91-815c-4741-8074-5b7c5779745d
+  cloudProjectId: 0970abee-7c98-4bc6-8b08-3f179cb1bd25
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Project Orbit Keycontrol
-  organizationId: unity_202301394
+  organizationId: unity_202301030
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

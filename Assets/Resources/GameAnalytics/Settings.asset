@@ -32,15 +32,15 @@ MonoBehaviour:
   Build:
   - 0.1
   SelectedPlatformOrganization:
-  - 
+  - Miles
   SelectedPlatformStudio:
-  - 
+  - GameProdMiles
   SelectedPlatformGame:
-  - 
-  SelectedPlatformGameID: ffffffff
-  SelectedOrganization: 00000000
-  SelectedStudio: 00000000
-  SelectedGame: 00000000
+  - Orbit Command
+  SelectedPlatformGameID: d82b0500
+  SelectedOrganization: 01000000
+  SelectedStudio: 01000000
+  SelectedGame: 01000000
   NewVersion: 
   Changes: 
   SignUpOpen: 0

@@ -99,7 +99,7 @@ public class UIManager : MonoBehaviour
         destroyedMeteors = 0;
         activeMeteors = 1;
 
-        //UpdateEarthHP(100f);
+        
         UpdateUltimateCharge(100f);
         UpdateDestroyedText();
         UpdateActiveMeteorsText();

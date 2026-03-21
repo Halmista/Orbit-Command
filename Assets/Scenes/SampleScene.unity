@@ -1073,10 +1073,10 @@ MonoBehaviour:
   earthSystem: {fileID: 1045716205}
   earthCenter: {fileID: 1204487061}
   earthRadius: 4
-  maxEarthHP: 500
+  maxEarthHP: 400
   currentEarthHP: 0
   isLightningMode: 0
-  ultimateChargeTime: 30
+  ultimateChargeTime: 50
   ultimateEffectPrefab: {fileID: 1293293901148674788, guid: 93d5ccb606b18ea4fa8eb934913e7c34,
     type: 3}
   ultimateLetters: 6
@@ -1105,17 +1105,17 @@ MonoBehaviour:
   spawnRadius: 50
   meteorSpeed: 1
   spawnInterval: 5
-  minSpawnInterval: 0.2
+  minSpawnInterval: 0.15
   intervalDecayRate: 0.015
-  baseMaxMeteors: 20
-  meteorsPerMinute: 15
+  baseMaxMeteors: 24
+  meteorsPerMinute: 16
   meteorDamage: 10
   bigMeteorDamage: 30
   bigMeteorPrefab: {fileID: 6201222640186743737, guid: b78c2b9f4d508344bb1027c34b11a503,
     type: 3}
-  bigMeteorHP: 50
+  bigMeteorHP: 100
   bigMeteorScale: 2
-  bigMeteorSpeed: 2
+  bigMeteorSpeed: 3
   lineMaterial: {fileID: 2100000, guid: 34ed31cb0b9d10d47a36edd896e8516f, type: 2}
 --- !u!114 &330585550
 MonoBehaviour:
@@ -1134,7 +1134,7 @@ MonoBehaviour:
     type: 3}
   laserPrefab: {fileID: 501380543026542393, guid: 21329f4d8564ab14bbba68ef8b8f4126,
     type: 3}
-  satelliteCount: 15
+  satelliteCount: 10
 --- !u!114 &330585551
 MonoBehaviour:
   m_ObjectHideFlags: 0

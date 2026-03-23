@@ -52,28 +52,43 @@ public class SatelliteShooter : MonoBehaviour
     Meteor FindMeteorInCone()
     {
         Meteor[] meteors = FindObjectsOfType<Meteor>();
-        float closestDist = Mathf.Infinity;
-        Meteor closest = null;
+        float closestScore = Mathf.Infinity;
+        Meteor best = null;
 
         Vector3 outward = (transform.position - sphere.transform.position).normalized;
 
         foreach (var m in meteors)
         {
-            Vector3 dirToMeteor = (m.transform.position - transform.position).normalized;
-            float angle = Vector3.Angle(outward, dirToMeteor);
-            float dist = Vector3.Distance(transform.position, m.transform.position);
+            Vector3 toMeteor = m.transform.position - transform.position;
+            float dist = toMeteor.magnitude;
 
-            if (angle <= detectionAngle / 2f && dist <= detectionRange)
+            if (dist > detectionRange)
+                continue;
+
+            Vector3 dir = toMeteor.normalized;
+
+            // Direction check (SOFT cone)
+            float dot = Vector3.Dot(outward, dir);
+
+            if (dot < 0.3f) // 👈 tweak this (higher = narrower vision)
+                continue;
+
+            // Earth blocking check
+            Ray ray = new Ray(transform.position, dir);
+            if (Physics.Raycast(ray, dist, LayerMask.GetMask("Earth")))
+                continue;
+
+            // Prioritize meteors closer to impact (not just distance)
+            float score = dist * (1.5f - dot);
+
+            if (score < closestScore)
             {
-                if (dist < closestDist)
-                {
-                    closestDist = dist;
-                    closest = m;
-                }
+                closestScore = score;
+                best = m;
             }
         }
 
-        return closest;
+        return best;
     }
 
     void FireLaser(Meteor target)

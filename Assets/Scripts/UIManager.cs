@@ -245,8 +245,8 @@ public class UIManager : MonoBehaviour
         Time.timeScale = isPaused ? 0f : 1f;
 
         // Optional: unlock cursor when paused
-        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = isPaused;
+        //Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+        //Cursor.visible = isPaused;
     }
 
     public void ShowUltimatePrompt(string sequence)

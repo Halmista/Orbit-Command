@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
@@ -14,5 +14,11 @@ public class UpgradeButton : MonoBehaviour
 
         GetComponent<Button>().onClick.RemoveAllListeners();
         GetComponent<Button>().onClick.AddListener(() => option.action.Invoke());
+    }
+
+    // ✅ Add this method to simulate a click via keyboard
+    public void Click()
+    {
+        option?.action.Invoke();
     }
 }

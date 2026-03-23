@@ -68,7 +68,11 @@ public class MeteorSpawner : MonoBehaviour
 
             // Active meteor cap scaling with time
             //int maxMeteors = baseMaxMeteors + Mathf.FloorToInt((gameTimer / 60f) * meteorsPerMinute);
-            int maxMeteors = baseMaxMeteors + Mathf.FloorToInt(Mathf.Sqrt(gameTimer / 30f) * meteorsPerMinute);
+            //int maxMeteors = baseMaxMeteors + Mathf.FloorToInt(Mathf.Sqrt(gameTimer / 30f) * meteorsPerMinute);
+            int scaledMax = baseMaxMeteors + Mathf.FloorToInt(Mathf.Sqrt(gameTimer / 20f) * meteorsPerMinute);
+
+            // Clamp to 60 max
+            int maxMeteors = Mathf.Clamp(scaledMax, baseMaxMeteors, 50);
 
 
             if (UIManager.Instance.ActiveMeteors < maxMeteors)
@@ -84,13 +88,32 @@ public class MeteorSpawner : MonoBehaviour
                 : 0;
 
             //float difficultyFromKills = destroyed * 0.002f;
-            float timeFactor = Mathf.Sqrt(gameTimer) * intervalDecayRate;
+            /*float timeFactor = Mathf.Sqrt(gameTimer) * intervalDecayRate;
             float killFactor = destroyed * 0.0015f;
 
             float dynamicInterval = Mathf.Clamp(spawnInterval - timeFactor - killFactor,
                 minSpawnInterval,
                 spawnInterval
-            );
+            ); */
+
+            float timeFactor = Mathf.Sqrt(gameTimer) * intervalDecayRate * 0.8f;
+            float killFactor = destroyed * 0.0012f;
+
+            // Slight easing so it doesn't get too crazy late-game
+            float difficulty = timeFactor + killFactor;
+
+            float dynamicInterval = Mathf.Lerp(spawnInterval, minSpawnInterval, difficulty);
+
+            // Clamp safety
+            dynamicInterval = Mathf.Clamp(dynamicInterval, minSpawnInterval, spawnInterval);
+
+            if (gameTimer > 120f) // after 2 minutes
+            {
+                maxMeteors += 10;
+                maxMeteors = Mathf.Min(maxMeteors, 50);
+
+                dynamicInterval *= 0.85f; // faster spawns
+            }
 
             //yield return new WaitForSeconds(dynamicInterval);
             yield return new WaitForSecondsRealtime(dynamicInterval);

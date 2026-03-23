@@ -20,6 +20,20 @@ public class UpgradeManager : MonoBehaviour
 
     private List<UpgradeOption> allUpgrades = new List<UpgradeOption>();
 
+    void Update()
+    {
+        if (upgradePanel.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1) && upgradeButtons.Length >= 1)
+                upgradeButtons[0].Click();
+            if (Input.GetKeyDown(KeyCode.Alpha2) && upgradeButtons.Length >= 2)
+                upgradeButtons[1].Click();
+            if (Input.GetKeyDown(KeyCode.Alpha3) && upgradeButtons.Length >= 3)
+                upgradeButtons[2].Click();
+        }
+    }
+
+
     void Awake()
     {
         Instance = this;
@@ -32,6 +46,7 @@ public class UpgradeManager : MonoBehaviour
         allUpgrades.Add(new UpgradeOption("Heal Earth 20%", HealEarth));
         allUpgrades.Add(new UpgradeOption("Ultimate Charges Faster", FasterUltimate));
         allUpgrades.Add(new UpgradeOption("Reduced Ultimate Letters", ReduceUltimateLetters));
+        allUpgrades.Add(new UpgradeOption("Increase Fire Rate", IncreaseFireRate));
     }
 
     
@@ -99,6 +114,20 @@ public class UpgradeManager : MonoBehaviour
     // UPGRADES
     // ----------------------
 
+    public void IncreaseFireRate()
+    {
+        GameAnalyticsManager.Instance?.LogUpgradeUsed("FireRate");
+
+        SatelliteShooter[] satellites = FindObjectsOfType<SatelliteShooter>();
+
+        foreach (var sat in satellites)
+        {
+            sat.fireRate *= 0.85f; // 🔥 15% faster firing
+            sat.fireRate = Mathf.Max(0.1f, sat.fireRate); // clamp so it doesn't go crazy
+        }
+
+        ResumeGame();
+    }
     public void AddSatellite()
     {
         //GameAnalyticsManager.Instance?.LogUpgradeSelected("AddSatellite");

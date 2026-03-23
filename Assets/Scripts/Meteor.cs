@@ -34,7 +34,7 @@ public class Meteor : MonoBehaviour
     {
         transform.position += direction * speed * Time.deltaTime;
 
-        float meteorRadius = 1f; // adjust to your meteor size
+        float meteorRadius = 1f; // adjust to meteor size
         if (Vector3.Distance(transform.position, earthPos) <= earthRadius + meteorRadius)
         {
             gameplay.TakeDamage(damage);

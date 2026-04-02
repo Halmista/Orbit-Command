@@ -125,7 +125,7 @@ public class MeteorSpawner : MonoBehaviour
         if (gameplay != null && gameplay.currentEarthHP <= 0f)
             return;
 
-        float lat = Random.Range(-60f, 60f) * Mathf.Deg2Rad;
+        float lat = Random.Range(-55f, 55f) * Mathf.Deg2Rad;
         float lon = Random.Range(0f, 360f) * Mathf.Deg2Rad;
 
         Vector3 dir = new Vector3(

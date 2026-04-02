@@ -1,13 +1,18 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance;
 
     public GameObject upgradePanel;
+
+    bool canSelectUpgrade = false;
+
+    private List<UpgradeOption> currentOptions = new List<UpgradeOption>();
 
     [Header("Upgrade Buttons")]
     public UpgradeButton[] upgradeButtons;
@@ -22,14 +27,14 @@ public class UpgradeManager : MonoBehaviour
 
     void Update()
     {
-        if (upgradePanel.activeSelf)
+        if (upgradePanel.activeSelf && canSelectUpgrade)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1) && upgradeButtons.Length >= 1)
-                upgradeButtons[0].Click();
-            if (Input.GetKeyDown(KeyCode.Alpha2) && upgradeButtons.Length >= 2)
-                upgradeButtons[1].Click();
-            if (Input.GetKeyDown(KeyCode.Alpha3) && upgradeButtons.Length >= 3)
-                upgradeButtons[2].Click();
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                SelectUpgradeByIndex(0);
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+                SelectUpgradeByIndex(1);
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+                SelectUpgradeByIndex(2);
         }
     }
 
@@ -49,12 +54,13 @@ public class UpgradeManager : MonoBehaviour
         allUpgrades.Add(new UpgradeOption("Increase Fire Rate", IncreaseFireRate));
     }
 
-    
+
 
     public void ShowUpgradeChoices()
     {
         Time.timeScale = 0f;
         upgradePanel.SetActive(true);
+        canSelectUpgrade = false;
 
         List<UpgradeOption> shuffled = new List<UpgradeOption>(allUpgrades);
 
@@ -64,13 +70,20 @@ public class UpgradeManager : MonoBehaviour
             (shuffled[i], shuffled[rand]) = (shuffled[rand], shuffled[i]);
         }
 
+        currentOptions.Clear();
+
         for (int i = 0; i < upgradeButtons.Length; i++)
         {
             UpgradeOption option = shuffled[i];
+            currentOptions.Add(option);
             upgradeButtons[i].Setup(option);
-            //GameAnalyticsManager.Instance?.LogUpgradeOffered(option.name);
         }
+
+        // Keyboard input can now safely work
+        canSelectUpgrade = true;
     }
+
+
 
     public void TriggerUpgrade()
     {
@@ -109,7 +122,15 @@ public class UpgradeManager : MonoBehaviour
         upgradeQueued = false;
         ShowUpgradeChoices();
     }
+    public void SelectUpgradeByIndex(int index)
+    {
+        if (!canSelectUpgrade || index < 0 || index >= upgradeButtons.Length)
+            return;
 
+        canSelectUpgrade = false;
+
+        upgradeButtons[index].Click(); // safely invokes the correct UpgradeOption
+    }
     // ----------------------
     // UPGRADES
     // ----------------------

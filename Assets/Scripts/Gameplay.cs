@@ -19,7 +19,7 @@ public class Gameplay : MonoBehaviour
     public bool isLightningMode = false;
 
     [Header("Ultimate Pulse Settings")]
-    public float ultimateChargeTime = 20f; // seconds to recharge
+    public float ultimateChargeTime = 80f; // seconds to recharge
     public GameObject ultimateEffectPrefab; // visual effect for the pulse
 
     [Header("Ultimate Typing Challenge")]
@@ -227,8 +227,10 @@ public class Gameplay : MonoBehaviour
 
         // Spawn visual effect
         if (ultimateEffectPrefab != null && earthCenter != null)
-            Instantiate(ultimateEffectPrefab, earthCenter.position, Quaternion.identity);
-
+        {
+            GameObject effect = Instantiate(ultimateEffectPrefab, earthCenter.position, Quaternion.identity);
+            Destroy(effect, 1.5f); 
+        }
         Meteor[] meteors = FindObjectsOfType<Meteor>();
 
         foreach (var meteor in meteors)

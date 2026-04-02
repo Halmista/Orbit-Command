@@ -70,7 +70,7 @@ public class SatelliteShooter : MonoBehaviour
             // Direction check (SOFT cone)
             float dot = Vector3.Dot(outward, dir);
 
-            if (dot < 0.3f) // 👈 tweak this (higher = narrower vision)
+            if (dot < 0.8f) // 👈 tweak this (higher = narrower vision)
                 continue;
 
             // Earth blocking check

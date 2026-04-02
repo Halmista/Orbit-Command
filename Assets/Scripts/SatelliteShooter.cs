@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class SatelliteShooter : MonoBehaviour
 {
-    public GameObject laserPrefab;
+    public GameObject laserPrefab; // assign your laser prefab here (with LaserHit attached)
 
     [Header("Detection")]
-    public float detectionRange = 10f; // radius around satellite to detect meteors
-    public float detectionAngle = 70f; // degrees of cone outward
+    public float detectionRange = 10f;
+    public float detectionAngle = 70f;
 
     [Header("Firing")]
     public float fireRate = 0.5f;
@@ -19,19 +19,16 @@ public class SatelliteShooter : MonoBehaviour
 
     void Awake()
     {
-        // Cache the sphere
         sphere = FindObjectOfType<WireframeSphere>();
 
-        //Register satellite
         if (SatelliteManager.Instance != null)
-           SatelliteManager.Instance.RegisterSatellite(this);
+            SatelliteManager.Instance.RegisterSatellite(this);
     }
 
     void Update()
     {
         if (laserPrefab == null || sphere == null) return;
 
-        // Check for meteors in cone
         Meteor targetMeteor = FindMeteorInCone();
 
         if (targetMeteor != null)
@@ -45,7 +42,7 @@ public class SatelliteShooter : MonoBehaviour
         }
         else
         {
-            fireTimer = 0f; // reset timer if no target
+            fireTimer = 0f;
         }
     }
 
@@ -62,25 +59,17 @@ public class SatelliteShooter : MonoBehaviour
             Vector3 toMeteor = m.transform.position - transform.position;
             float dist = toMeteor.magnitude;
 
-            if (dist > detectionRange)
-                continue;
+            if (dist > detectionRange) continue;
 
             Vector3 dir = toMeteor.normalized;
-
-            // Direction check (SOFT cone)
             float dot = Vector3.Dot(outward, dir);
 
-            if (dot < 0.8f) // 👈 tweak this (higher = narrower vision)
-                continue;
+            if (dot < 0.8f) continue;
 
-            // Earth blocking check
             Ray ray = new Ray(transform.position, dir);
-            if (Physics.Raycast(ray, dist, LayerMask.GetMask("Earth")))
-                continue;
+            if (Physics.Raycast(ray, dist, LayerMask.GetMask("Earth"))) continue;
 
-            // Prioritize meteors closer to impact (not just distance)
             float score = dist * (1.5f - dot);
-
             if (score < closestScore)
             {
                 closestScore = score;
@@ -95,9 +84,9 @@ public class SatelliteShooter : MonoBehaviour
     {
         if (laserPrefab == null || target == null) return;
 
-        // Direction from satellite to target
         Vector3 dir = (target.transform.position - transform.position).normalized;
 
+        // Instantiate laser
         GameObject laser = Instantiate(laserPrefab, transform.position, Quaternion.LookRotation(dir));
 
         Rigidbody rb = laser.GetComponent<Rigidbody>();
@@ -106,20 +95,24 @@ public class SatelliteShooter : MonoBehaviour
         rb.useGravity = false;
         rb.velocity = dir * laserSpeed;
 
+        // Assign the prefab to LaserHit so bounces work
+        LaserHit laserHit = laser.GetComponent<LaserHit>();
+        if (laserHit != null)
+        {
+            laserHit.laserPrefab = laserPrefab; // ✅ important for bounce logic
+            laserHit.remainingBounces = LaserStats.bounces; // use current upgrade bounces
+        }
+
         // Ignore collision with sphere
         Collider laserCol = laser.GetComponent<Collider>();
         Collider sphereCol = sphere.GetComponent<Collider>();
         if (laserCol != null && sphereCol != null)
             Physics.IgnoreCollision(laserCol, sphereCol);
 
-        // Destroy laser after 5 seconds
+        // Destroy laser after 5 seconds if it never hits anything
         Destroy(laser, 5f);
-
-        // Add a script to deal damage when it hits
-        laser.AddComponent<LaserHit>();
     }
 
-    // Helper for LetterInputController
     public bool IsBusy()
     {
         return FindMeteorInCone() != null;

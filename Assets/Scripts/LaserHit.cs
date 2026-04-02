@@ -2,18 +2,24 @@ using UnityEngine;
 
 public class LaserHit : MonoBehaviour
 {
-    public float speed = 25f; 
-    int remainingBounces; 
-    Meteor lastMeteorHit;
+    public float speed = 25f;
+    public GameObject laserPrefab; // assign your laser prefab in inspector
+    [HideInInspector] public int remainingBounces = 0;
+    [HideInInspector] public Meteor lastMeteorHit;
 
-    void Start() 
-    { 
-        remainingBounces = LaserStats.bounces; 
-    
+    Rigidbody rb;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            rb = gameObject.AddComponent<Rigidbody>();
+        rb.useGravity = false;
     }
-    void Update() 
-    { 
-        transform.position += transform.forward * speed * Time.deltaTime; 
+
+    void Start()
+    {
+        rb.velocity = transform.forward * speed;
     }
 
     void OnTriggerEnter(Collider other)
@@ -23,27 +29,41 @@ public class LaserHit : MonoBehaviour
 
         // Damage meteor
         meteor.TakeDamage(LaserStats.damage);
-        lastMeteorHit = meteor;
 
+        // Bounce logic
         if (remainingBounces > 0)
         {
             Meteor nextMeteor = FindNearestMeteor(meteor.transform.position);
-
             if (nextMeteor != null)
             {
-                // Spawn fresh laser from prefab
-             
-                    GameObject newLaser = Instantiate(gameObject, meteor.transform.position, Quaternion.LookRotation(nextMeteor.transform.position - meteor.transform.position)); 
-                    LaserHit laser = newLaser.GetComponent<LaserHit>(); 
-                    laser.remainingBounces = remainingBounces - 1; 
-                    Destroy(gameObject); 
-                    return;
-                
+                SpawnBounce(nextMeteor, meteor);
             }
         }
 
-        // No bounce or no next target
-        Destroy(gameObject);
+        Destroy(gameObject); // destroy this laser regardless
+    }
+
+    void SpawnBounce(Meteor nextMeteor, Meteor justHit)
+    {
+        if (laserPrefab == null) return;
+
+        GameObject newLaser = Instantiate(laserPrefab, justHit.transform.position,
+            Quaternion.LookRotation(nextMeteor.transform.position - justHit.transform.position));
+
+        LaserHit newHit = newLaser.GetComponent<LaserHit>();
+        newHit.remainingBounces = remainingBounces - 1;
+        newHit.lastMeteorHit = justHit; // prevent immediate back-bounce
+        newHit.speed = speed;
+        newHit.laserPrefab = laserPrefab;
+
+        Rigidbody newRb = newLaser.GetComponent<Rigidbody>();
+        if (newRb != null)
+        {
+            Vector3 dir = (nextMeteor.transform.position - justHit.transform.position).normalized;
+            newRb.velocity = dir * speed;
+        }
+
+        Destroy(newLaser, 5f); // safety
     }
 
     Meteor FindNearestMeteor(Vector3 pos)

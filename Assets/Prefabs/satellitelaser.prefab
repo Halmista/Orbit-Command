@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2028005648438979871}
   - component: {fileID: 2398933227506438868}
   - component: {fileID: 3467765102612965280}
+  - component: {fileID: -1696378639090997978}
   m_Layer: 0
   m_Name: satellitelaser
   m_TagString: Laser
@@ -238,3 +239,19 @@ TrailRenderer:
   m_Autodestruct: 1
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &-1696378639090997978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501380543026542393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0def0367291ad4185d4b62bd8cce63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 25
+  laserPrefab: {fileID: 501380543026542393}
+  remainingBounces: 0
+  lastMeteorHit: {fileID: 0}

@@ -4,35 +4,20 @@ using UnityEngine;
 
 public class SoundEffect : MonoBehaviour
 {
-    public AudioClip[] soundEffects; // drag as many sounds as you want
+    public AudioClip[] laserSounds;
     private AudioSource audioSource;
 
-    void Start()
+    void Awake()
     {
         audioSource = GetComponent<AudioSource>();
     }
 
-    void Update()
+    public void PlayLaser()
     {
-        // loop through A to Z
-        for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                PlayRandomSound();
-            }
-        }
-    }
+        if (laserSounds.Length == 0 || audioSource == null) return;
 
-    void PlayRandomSound()
-    {
-        if (soundEffects.Length == 0) return;
-
-        int index = Random.Range(0, soundEffects.Length);
-
-        // optional pitch variation (makes it less repetitive)
+        int index = Random.Range(0, laserSounds.Length);
         audioSource.pitch = Random.Range(0.9f, 1.1f);
-
-        audioSource.PlayOneShot(soundEffects[index]);
+        audioSource.PlayOneShot(laserSounds[index]);
     }
 }

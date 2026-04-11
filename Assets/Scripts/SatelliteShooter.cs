@@ -5,6 +5,7 @@ using UnityEngine;
 public class SatelliteShooter : MonoBehaviour
 {
     public GameObject laserPrefab;
+    private SoundEffect soundEffect;
 
     [Header("Detection")]
     public float detectionRange = 10f; // radius around satellite to detect meteors
@@ -19,6 +20,7 @@ public class SatelliteShooter : MonoBehaviour
 
     void Awake()
     {
+        soundEffect = GetComponent<SoundEffect>();
         // Cache the sphere
         sphere = FindObjectOfType<WireframeSphere>();
 
@@ -90,6 +92,11 @@ public class SatelliteShooter : MonoBehaviour
 
         rb.useGravity = false;
         rb.velocity = dir * laserSpeed;
+
+        if (soundEffect != null)
+        {
+            soundEffect.PlayLaser();
+        }
 
         // Ignore collision with sphere
         Collider laserCol = laser.GetComponent<Collider>();

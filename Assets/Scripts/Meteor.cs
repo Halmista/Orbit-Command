@@ -14,6 +14,7 @@ public class Meteor : MonoBehaviour
     public GameObject shockwavePrefab;
     private Transform healthBarRoot;
     private Transform healthBarFill;
+    private MeteorSFX meteorSFX;
 
 
     public void Initialize(Vector3 dir, float spd, Gameplay game, float dmg, Vector3 ePos, float eRadius)
@@ -29,6 +30,8 @@ public class Meteor : MonoBehaviour
     {
         hp = maxHP;
         CreateHealthBar();
+
+        meteorSFX = FindObjectOfType<MeteorSFX>();
     }
     void Update()
     {
@@ -150,6 +153,10 @@ public class Meteor : MonoBehaviour
                 xp = 20f;
 
             XPManager.Instance.AddXP(xp);
+        }
+        if (meteorSFX != null)
+        {
+            meteorSFX.PlayDeathSound(transform.position);
         }
         Destroy(gameObject);
         //MeteorKillTracker.Instance.AddKill();
